@@ -22,6 +22,7 @@
       ,"jump": "home/homepage2"
     }]
   },
+
   {
     "title": "统计中心"
     ,"icon": "layui-icon-survey"
