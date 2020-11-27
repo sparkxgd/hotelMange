@@ -3,11 +3,11 @@
   ,"msg": ""
   ,"data": [{
     "title": "酒店管理"
+    ,"name":"hotelMange"
     ,"icon": "layui-icon-home"
     ,"list": [{
-      "name": "homepage1"
+      "name": "rooms"
       ,"title": "房态图"
-      ,"jump": "home/homepage1"
     }, {
       "name": "homepage2"
       ,"title": "入住管理"
