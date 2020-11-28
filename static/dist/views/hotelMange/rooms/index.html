@@ -16,6 +16,22 @@
     color: red;
 }
 .rooms .layui-card{height: 80px;}
+    .layui-form-item .layui-inline{
+        width: 200px;
+        margin-left: 0px;
+        margin-right: 0px;
+        margin-top: 10px;
+    }
+    .layui-form-label{
+        width: 70px;
+    }
+    .toolsbs{
+        text-align: right;
+        padding-right: 10px;
+    }
+    .infotools{
+        padding-top: 10px;
+    }
 </style>
 
 <div class="layui-card layadmin-header">
@@ -26,7 +42,7 @@
   </div>
 </div>
 
-<div class="layui-row layui-bg-gray">
+<div class="layui-row layui-bg-gray infotools">
     <!-- 信息-->
     <div class="layui-col-md7 roomsinfo">
         <span>空房:<label>10</label>间</span>
@@ -36,7 +52,7 @@
         <span>预计今日离开:<label>10</label>间</span>
     </div>
     <!-- 操作按钮-->
-    <div class="layui-col-md5">
+    <div class="layui-col-md5 toolsbs">
         <button type="button" class="layui-btn layui-btn-sm layui-bg-red">入住</button>
         <button type="button" class="layui-btn layui-btn-sm">退房</button>
         <button type="button" class="layui-btn layui-btn-sm layui-btn-normal">调换</button>
@@ -47,7 +63,53 @@
     </div>
 </div>
 <!--搜索-->
-<div></div>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">房间状态</label>
+            <div class="layui-input-block">
+                <select name="roomStatus">
+                      <option value="0">不限</option>
+                      <option value="1">空闲</option>
+                      <option value="2">入住</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="roomType">
+                      <option value="0">--不限--</option>
+                      <option value="1">豪华单间</option>
+                      <option value="2">标准双人</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">楼层</label>
+            <div class="layui-input-block">
+                <select name="roomNum">
+                      <option value="0">--不限--</option>
+                      <option value="1">一楼</option>
+                      <option value="2">二楼</option>
+                    <option value="3">三楼</option>
+                    <option value="4">四楼</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">房间号</label>
+          <div class="layui-input-block">
+            <input type="text" name="roomNo" placeholder="请输入" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-inline">
+          <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+          </button>
+        </div>
+    </div>
+</div>
 <!--房态图--->
 <div class="layui-fluid">
     <div class="layui-row layui-col-space10 rooms">
@@ -250,3 +312,13 @@
     </div>
 
 </div>
+
+<script>
+layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,form = layui.form;
+
+  form.render(null, 'layadmin-userfront-formlist');
+});
+</script>
