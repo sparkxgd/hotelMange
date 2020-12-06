@@ -77,8 +77,15 @@ WSGI_APPLICATION = 'hotelMange.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',      # 数据库引擎
+        'NAME': 'hotel2',                        # 数据库名
+        'USER': 'root',                             # 用户名
+        'PASSWORD': '123456',                       # 密码
+        'HOST': '127.0.0.1',                        # 数据库主机，默认为127.0.0.1
+        'PORT': '3306',                             # 数据库端口，MySQL默认为3306
+        'OPTIONS': {
+            'autocommit': True,
+        },
     }
 }
 

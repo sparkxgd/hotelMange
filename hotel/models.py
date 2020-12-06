@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 class CheckIn(models.Model):
     custumer_id = models.IntegerField(db_column='custumer _id', blank=True, null=True)  # Field renamed to remove unsuitable characters.
     room_id = models.IntegerField(blank=True, null=True)
