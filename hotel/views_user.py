@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from datetime import datetime
 from django.http import JsonResponse
 
 from hotel import models
+
+import json
 
 # 用户管理
 
@@ -21,3 +23,53 @@ def get_list(request):
         result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
 
     return JsonResponse(result)
+
+
+# 保存用户信息
+def add(request):
+    # 0：成功，-1：不成功
+    result = {"code": 0, "msg": "操作成功！！"}
+    # 获取页面的数据
+    username = request.POST.get("username")
+    # 判断一下这个用户是否存在，如果存在，就不能添加
+    u = models.User.objects.filter(username = username)
+    if u:
+        result["code"] = -1
+        result["msg"] = "用户已经存在，不能添加！！"
+    else:
+        # 插到数据库里面
+        m = models.User()
+        m.username = username
+        m.password = "123456"
+        m.status = 0
+        m.updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        m.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 真正的保存
+        m.save()
+    return JsonResponse(result)
+
+
+#   删除
+def delete(request):
+    result = {"code": 0, "msg": "删除成功！"}
+    #   获取前端的数据
+    ids = request.POST.get("id")
+    models.User.objects.filter(id=ids).delete()
+    return JsonResponse(result)
+
+
+#   批量删除
+def batchdel(request):
+    result = {"code": 0, "msg": "删除成功！"}
+    #   获取前端的数据
+    ids = request.POST.get("ids")
+    #   转化成json数据
+    ids_json = json.loads(ids)
+    #   转换成列表
+    ids_list = []
+    for m in ids_json:
+        ids_list.append(m["id"])
+    #   删除
+    models.User.objects.filter(id__in=ids_list).delete()
+    return JsonResponse(result)
+

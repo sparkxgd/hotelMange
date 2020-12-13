@@ -16,8 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from hotel import views
+from hotel import views_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index),
+    path('users/', views_user.get_list),
+    path('user_add/', views_user.add),
+    path('user_del/', views_user.delete),
+    path('user_batchdel/', views_user.batchdel),
 ]

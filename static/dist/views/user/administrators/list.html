@@ -76,37 +76,36 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
 
   //事件
   var active = {
+      //批量删除方法
     batchdel: function(){
       var checkStatus = table.checkStatus('LAY-user-back-manage')
       ,checkData = checkStatus.data; //得到选中的数据
-
       if(checkData.length === 0){
         return layer.msg('请选择数据');
       }
-      
-      layer.prompt({
-        formType: 1
-        ,title: '敏感操作，请验证口令'
-      }, function(value, index){
-        layer.close(index);
-        
         layer.confirm('确定删除吗？', function(index) {
-          
           //执行 Ajax 后重载
-          /*
           admin.req({
-            url: 'xxx'
-            //,……
+            type:"POST",
+             url:"/user_batchdel/",
+              data:{"ids":JSON.stringify(checkData)},
+            dataType:'json',
+            //不加这个，ajax会将结果后边加个[]，例如{'vals[]':[4,6,8]}
+            traditional:true,
+　　　　　　  //不加这个，会报服务器终止了一个在运行的程序
+            async: false,
+                  success:function (r) {
+                      layer.alert(r.msg);
+                      layui.table.reload("LAY-user-back-manage");
+                  }
           });
-          */
           table.reload('LAY-user-back-manage');
           layer.msg('已删除');
         });
-      }); 
     }
     ,add: function(){
       admin.popup({
-        title: '添加管理员'
+        title: '添加用户'
         ,area: ['420px', '450px']
         ,id: 'LAY-popup-useradmin-add'
         ,success: function(layero, index){
@@ -116,11 +115,22 @@ layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin', 't
             //监听提交
             form.on('submit(LAY-user-back-submit)', function(data){
               var field = data.field; //获取提交的字段
-
               //提交 Ajax 成功后，关闭当前弹层并重载表格
-              //$.ajax({});
-              layui.table.reload('LAY-user-back-manage'); //重载表格
-              layer.close(index); //执行关闭 
+              $.ajax({
+                  type:"POST",
+                  url:"/user_add/",
+                  data:field,
+                  dataType:"json",
+                  success:function (d) {
+                      if(d.code==-1) {
+                          layer.msg(d.msg);
+                      }else{
+                           layui.table.reload('LAY-user-back-manage'); //重载表格
+                            layer.close(index); //执行关闭
+                      }
+                  }
+              });
+
             });
           });
         }

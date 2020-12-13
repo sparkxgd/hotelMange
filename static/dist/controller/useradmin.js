@@ -65,10 +65,20 @@
         text: "对不起，加载出现异常！"
     }), l.on("tool(LAY-user-back-manage)", function (e) {
         var l = e.data;
-        "del" === e.event ? layer.prompt({formType: 1, title: "敏感操作，请验证口令"}, function (i, t) {
-            layer.close(t), layer.confirm("确定删除此管理员？", function (i) {
-                console.log(e), e.del(), layer.close(i)
-            })
+        "del" === e.event ?  layer.confirm("确定删除此用户？", function (i) {
+                   //提交 Ajax 成功后，关闭当前弹层并重载表格
+               layui.admin.req({
+                  type:"POST",
+                  url:"/user_del/",
+                  data:{"id":l.id},
+                  dataType:"json",
+                  success:function (r) {
+                      layer.alert(r.msg);
+                      layui.table.reload("LAY-user-back-manage");
+                  }
+              })
+                    , e.del()
+                    , layer.close(i)
         }) : "edit" === e.event && i.popup({
             title: "编辑管理员",
             area: ["420px", "450px"],
