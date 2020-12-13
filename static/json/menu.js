@@ -45,9 +45,9 @@
       ,"title": "基本信息"
       ,"jump": "home/homepage1"
     }, {
-      "name": "homepage2"
-      ,"title": "人员管理"
-      ,"jump": "home/homepage2"
+      "name": "userlist"
+      ,"title": "用户管理"
+        ,"jump": "user/administrators/list"
     }, {
       "name": "homepage2"
       ,"title": "权限管理"
@@ -58,24 +58,7 @@
       ,"jump": "home/homepage2"
     }]
   },
-  {
-    "name": "user"
-    ,"title": "用户"
-    ,"icon": "layui-icon-user"
-    ,"list": [{
-      "name": "user"
-      ,"title": "网站用户"
-      ,"jump": "user/user/list"
-    }, {
-      "name": "administrators-list"
-      ,"title": "后台管理员"
-      ,"jump": "user/administrators/list"
-    }, {
-      "name": "administrators-rule"
-      ,"title": "角色管理"
-      ,"jump": "user/administrators/role"
-    }]
-  }, {
+   {
     "name": "set"
     ,"title": "设置"
     ,"icon": "layui-icon-set"
