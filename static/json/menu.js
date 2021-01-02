@@ -53,9 +53,9 @@
       ,"title": "权限管理"
       ,"jump": "home/homepage2"
     }, {
-      "name": "homepage2"
+      "name": "floor"
       ,"title": "楼房管理"
-      ,"jump": "home/homepage2"
+      ,"jump": "baseMange/floor/list"
     }]
   },
    {

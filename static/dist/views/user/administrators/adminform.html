@@ -3,6 +3,7 @@
     <label class="layui-form-label">账号</label>
     <div class="layui-input-inline">
       <script type="text/html" template="">
+          <input type="hidden" name="id" value="{{ d.params.id}}">
         <input type="text" name="username" value="{{ d.params.username|| '' }}" lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
       </script>
     </div>

@@ -86,8 +86,16 @@
             success: function (e, i) {
                 t(this.id).render("user/administrators/adminform", l).done(function () {
                     r.render(null, "layuiadmin-form-admin"), r.on("submit(LAY-user-back-submit)", function (e) {
-                        e.field;
-                        layui.table.reload("LAY-user-back-manage"), layer.close(i)
+                        layui.admin.req({
+                                            type:"post",
+                                            url:"/user_edit/",
+                                            data:e.field,
+                                            dataType:"json",
+                                            success:function (r) {
+                                                layer.alert(r.msg);
+                                                layui.table.reload("LAY-user-back-manage");
+                                            }
+                                         }), layer.close(i)
                     })
                 })
             }

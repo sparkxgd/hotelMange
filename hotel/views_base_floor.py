@@ -1,23 +1,23 @@
 from datetime import datetime
 from django.http import JsonResponse
 
-from hotel.models import User as Mo
+from hotel.models import Floor as Mo
 
 import json
 
-# 用户管理
+# 楼房管理
 
 
-# 获取用户数据
+# 获取楼房楼房数据
 def get_list(request):
     #   获取页面提交的数据
     page = int(request.GET.get("page"))
     limit = int(request.GET.get("limit"))
-    username = request.GET.get("username")
+    no = request.GET.get("no")
     status = request.GET.get("status",0)
-    if username:
+    if no:
         #   到数据库去查找数据
-        values = Mo.objects.filter(username__contains=username,status=status)[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(no__contains=no,status=status)[(page-1)*limit:limit*page].values()
         datas = list(values)
         total =len(datas)
     else:
@@ -34,39 +34,46 @@ def get_list(request):
     return JsonResponse(result)
 
 
-# 保存用户信息
+# 保存楼房信息
 def add(request):
     # 0：成功，-1：不成功
     result = {"code": 0, "msg": "操作成功！！"}
     # 获取页面的数据
-    username = request.POST.get("username")
-    # 判断一下这个用户是否存在，如果存在，就不能添加
-    u = Mo.objects.filter(username = username)
+    no = request.POST.get("no")
+    name = request.POST.get("name")
+    floorno = request.POST.get("floorno")
+    remark = request.POST.get("remark")
+    # 判断一下这个楼房是否存在，如果存在，就不能添加
+    u = Mo.objects.filter(no=no)
     if u:
         result["code"] = -1
         result["msg"] = "用户已经存在，不能添加！！"
     else:
         # 插到数据库里面
         m = Mo()
-        m.username = username
-        m.password = "123456"
+        m.no = no
+        m.name = name
+        m.floorno = floorno
         m.status = 0
+        m.remark = remark
         m.updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         m.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 真正的保存
         m.save()
     return JsonResponse(result)
 
-
 #   修改、编辑
 def edit(request):
     result = {"code": 0, "msg": "修改成功！"}
     #   获取前端的数据
     id = request.POST.get("id")
-    username = request.POST.get("username")
+    name = request.POST.get("name")
+    no = request.POST.get("no")
+    floorno = request.POST.get("floorno")
     updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    remark = request.POST.get("remark")
     #   更新
-    Mo.objects.filter(id=id).update(username=username,updatetime=updatetime)
+    Mo.objects.filter(id=id).update(name=name,no=no,floorno = floorno,remark=remark,updatetime=updatetime)
     return JsonResponse(result)
 
 #   删除

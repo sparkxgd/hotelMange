@@ -17,12 +17,19 @@ from django.contrib import admin
 from django.urls import path
 from hotel import views
 from hotel import views_user
+from hotel import views_base_floor
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index),
     path('users/', views_user.get_list),
     path('user_add/', views_user.add),
+    path('user_edit/', views_user.edit),
     path('user_del/', views_user.delete),
     path('user_batchdel/', views_user.batchdel),
+    path('floors/', views_base_floor.get_list),
+    path('floor_add/', views_base_floor.add),
+    path('floor_edit/', views_base_floor.edit),
+    path('floor_del/', views_base_floor.delete),
+    path('floor_batchdel/', views_base_floor.batchdel),
 ]

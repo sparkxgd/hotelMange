@@ -43,6 +43,7 @@ class Floor(models.Model):
     updatetime = models.DateTimeField(blank=True, null=True)
     createtime = models.DateTimeField(blank=True, null=True)
     status = models.IntegerField(blank=True, null=True)
+    remark = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
