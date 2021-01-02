@@ -18,6 +18,7 @@ from django.urls import path
 from hotel import views
 from hotel import views_user
 from hotel import views_base_floor
+from hotel import views_base_roomtype
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +33,9 @@ urlpatterns = [
     path('floor_edit/', views_base_floor.edit),
     path('floor_del/', views_base_floor.delete),
     path('floor_batchdel/', views_base_floor.batchdel),
+    path('roomtypes/', views_base_roomtype.get_list),
+    path('roomtype_add/', views_base_roomtype.add),
+    path('roomtype_edit/', views_base_roomtype.edit),
+    path('roomtype_del/', views_base_roomtype.delete),
+    path('roomtype_batchdel/', views_base_roomtype.batchdel),
 ]

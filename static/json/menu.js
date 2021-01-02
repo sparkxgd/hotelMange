@@ -41,9 +41,13 @@
     "title": "后台管理"
     ,"icon": "layui-icon-home"
     ,"list": [{
-      "name": "homepage1"
+      "name": "basemanage"
       ,"title": "基本信息"
-      ,"jump": "home/homepage1"
+      ,"list":[{
+        "name": "roomtype"
+        ,"title": "房间类型管理"
+        ,"jump": "baseMange/roomtype/list"
+        }]
     }, {
       "name": "userlist"
       ,"title": "用户管理"
