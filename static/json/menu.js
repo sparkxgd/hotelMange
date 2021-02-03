@@ -17,9 +17,9 @@
       ,"title": "退房管理"
       ,"jump": "home/homepage2"
     }, {
-      "name": "homepage2"
-      ,"title": "会员管理"
-      ,"jump": "home/homepage2"
+      "name": "custumer"
+      ,"title": "客户管理"
+      ,"jump": "hotelMange/custumer/list"
     }]
   },
 
@@ -47,6 +47,10 @@
         "name": "roomtype"
         ,"title": "房间类型管理"
         ,"jump": "baseMange/roomtype/list"
+        },{
+        "name": "room"
+        ,"title": "房间管理"
+        ,"jump": "baseMange/room/list"
         }]
     }, {
       "name": "userlist"

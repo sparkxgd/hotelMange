@@ -1,11 +1,11 @@
 from datetime import datetime
 from django.http import JsonResponse
 
-from hotel.models import RoomType as Mo
+from hotel.models import Custumer as Mo
 
 import json
 
-# 房间类型管理
+# 客户管理
 
 
 # 获取数据列表
@@ -38,20 +38,27 @@ def add(request):
     # 0：成功，-1：不成功
     result = {"code": 0, "msg": "操作成功！！"}
     # 获取页面的数据
-    typename = request.POST.get("typename")
-    price = request.POST.get("price")
-    vip_price = request.POST.get("vip_price")
+    name = request.POST.get("name")
+    idcard = request.POST.get("idcard")
+    sex = request.POST.get("sex")
+    type = request.POST.get("type")
+    address = request.POST.get("address")
+    tel = request.POST.get("tel")
     # 判断一下这个楼房是否存在，如果存在，就不能添加
-    u = Mo.objects.filter(typename=typename)
+    u = Mo.objects.filter(idcard=idcard)
     if u:
         result["code"] = -1
-        result["msg"] = "类型经存在，不能添加！！"
+        result["msg"] = "客户已经存在，不能添加！！"
     else:
         # 插到数据库里面
         m = Mo()
-        m.typename = typename
-        m.price = price
-        m.vip_price = vip_price
+        m.name = name
+        m.idcard = idcard
+        m.sex = sex
+        m.type = type
+        m.address = address
+        m.tel = tel
+        m.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         m.updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 真正的保存
         m.save()

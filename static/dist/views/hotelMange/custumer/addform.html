@@ -1,0 +1,65 @@
+<div class="layui-form" lay-filter="layuiadmin-form-custumer" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">姓名</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+          <input type="hidden" name="id" value="{{ d.params.id}}">
+        <input type="text" name="name" value="{{ d.params.name|| '' }}" lay-verify="required" placeholder="请输入房间类型名称" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">性别</label>
+              <div class="layui-input-block">
+                <input type="radio" name="sex" value="0" title="女">
+                <input type="radio" name="sex" value="1" title="男" checked>
+              </div>
+    </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">身份证</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+        <input type="text" name="idcard" value="{{ d.params.idcard|| '' }}" lay-verify="required" placeholder="请输入身份证" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+      <div class="layui-form-item">
+    <label class="layui-form-label">电话</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+        <input type="text" name="tel" value="{{ d.params.tel|| '' }}" lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+      <div class="layui-form-item">
+    <label class="layui-form-label">家庭地址</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+        <input type="text" name="address" value="{{ d.params.address|| '' }}" lay-verify="required" placeholder="请输入家庭地址" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+          <div class="layui-form-item">
+    <label class="layui-form-label">类型</label>
+              <div class="layui-input-block">
+                <input type="radio" name="type" value="0" title="普通" checked>
+                <input type="radio" name="type" value="1" title="VIP会员">
+              </div>
+    </div>
+
+
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit="" lay-filter="LAY-custumer-back-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</div>
+</div>
+<script>
+layui.use(['admin', 'form'], function(){
+  var $ = layui.$
+  ,form = layui.form;
+
+});
+</script>

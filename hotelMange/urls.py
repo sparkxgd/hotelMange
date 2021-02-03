@@ -19,6 +19,9 @@ from hotel import views
 from hotel import views_user
 from hotel import views_base_floor
 from hotel import views_base_roomtype
+from hotel import views_base_room
+from hotel import views_base_custumer
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,9 +36,21 @@ urlpatterns = [
     path('floor_edit/', views_base_floor.edit),
     path('floor_del/', views_base_floor.delete),
     path('floor_batchdel/', views_base_floor.batchdel),
+    path('floor_all/', views_base_floor.get_all_list),
     path('roomtypes/', views_base_roomtype.get_list),
     path('roomtype_add/', views_base_roomtype.add),
     path('roomtype_edit/', views_base_roomtype.edit),
     path('roomtype_del/', views_base_roomtype.delete),
     path('roomtype_batchdel/', views_base_roomtype.batchdel),
+    path('roomtype_all/', views_base_roomtype.get_all_list),
+    path('rooms/', views_base_room.get_list),
+    path('room_add/', views_base_room.add),
+    path('room_edit/', views_base_room.edit),
+    path('room_del/', views_base_room.delete),
+    path('room_batchdel/', views_base_room.batchdel),
+    path('custumers/', views_base_custumer.get_list),
+    path('custumer_add/', views_base_custumer.add),
+    path('custumer_edit/', views_base_custumer.edit),
+    path('custumer_del/', views_base_custumer.delete),
+    path('custumer_batchdel/', views_base_custumer.batchdel),
 ]

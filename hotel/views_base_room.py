@@ -1,27 +1,28 @@
 from datetime import datetime
 from django.http import JsonResponse
 
-from hotel.models import RoomType as Mo
+from hotel.models import Room as Mo
 
 import json
 
-# 房间类型管理
+# 房间管理
 
 
-# 获取数据列表
+# 获取房间数据
 def get_list(request):
     #   获取页面提交的数据
     page = int(request.GET.get("page"))
     limit = int(request.GET.get("limit"))
-    typename = request.GET.get("typename")
-    if typename:
+    no = request.GET.get("no")
+    status = request.GET.get("status",0)
+    if no:
         #   到数据库去查找数据
-        values = Mo.objects.filter(typename__contains=typename)[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(no__contains=no,status=status)[(page-1)*limit:limit*page].values()
         datas = list(values)
         total =len(datas)
     else:
         #   到数据库去查找数据
-        values = Mo.objects.all()[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(status=status)[(page-1)*limit:limit*page].values()
         datas = list(values)
         total =len(datas)
     # 构造返回数据
@@ -33,26 +34,30 @@ def get_list(request):
     return JsonResponse(result)
 
 
-# 保存信息
+# 保存楼房信息
 def add(request):
     # 0：成功，-1：不成功
     result = {"code": 0, "msg": "操作成功！！"}
     # 获取页面的数据
-    typename = request.POST.get("typename")
-    price = request.POST.get("price")
-    vip_price = request.POST.get("vip_price")
+    room = request.POST.get("room")
+    floorid = request.POST.get("floorid")
+    floorno = request.POST.get("floorno")
+    room_type_id = request.POST.get("room_type_id")
     # 判断一下这个楼房是否存在，如果存在，就不能添加
-    u = Mo.objects.filter(typename=typename)
+    u = Mo.objects.filter(room=room,floorid=floorid)
     if u:
         result["code"] = -1
-        result["msg"] = "类型经存在，不能添加！！"
+        result["msg"] = "用户已经存在，不能添加！！"
     else:
         # 插到数据库里面
         m = Mo()
-        m.typename = typename
-        m.price = price
-        m.vip_price = vip_price
+        m.room = room
+        m.floorid = floorid
+        m.floorno = floorno
+        m.status = 0
+        m.room_type_id = room_type_id
         m.updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        m.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 真正的保存
         m.save()
     return JsonResponse(result)
@@ -62,12 +67,13 @@ def edit(request):
     result = {"code": 0, "msg": "修改成功！"}
     #   获取前端的数据
     id = request.POST.get("id")
-    typename = request.POST.get("typename")
-    price = request.POST.get("price")
-    vip_price = request.POST.get("vip_price")
+    name = request.POST.get("name")
+    no = request.POST.get("no")
+    floorno = request.POST.get("floorno")
     updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    remark = request.POST.get("remark")
     #   更新
-    Mo.objects.filter(id=id).update(typename=typename,price=price,vip_price= vip_price,updatetime=updatetime)
+    Mo.objects.filter(id=id).update(name=name,no=no,floorno = floorno,remark=remark,updatetime=updatetime)
     return JsonResponse(result)
 
 #   删除
@@ -92,19 +98,5 @@ def batchdel(request):
         ids_list.append(m["id"])
     #   删除
     Mo.objects.filter(id__in=ids_list).delete()
-    return JsonResponse(result)
-
-
-# 获取所有数据
-def get_all_list(request):
-    #   到数据库去查找数据
-    values = Mo.objects.all().values()
-    datas = list(values)
-    total = len(datas)
-    # 构造返回数据
-    if total == 0:
-        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
-    else:
-        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
     return JsonResponse(result)
 

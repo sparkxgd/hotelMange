@@ -1,0 +1,128 @@
+<div class="layui-form" lay-filter="layuiadmin-form-room" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">房间号</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+          <input type="hidden" name="id" value="{{ d.params.id}}">
+        <input type="text" name="room" value="{{ d.params.room|| '' }}" lay-verify="required" placeholder="请输入楼房号" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+  <div class="layui-form-item">
+      <label class="layui-form-label">楼房</label>
+      <div class="layui-input-inline">
+            <div class="layui-col-md6">
+                <select name="floorid" lay-verify="" id="floor" lay-filter="floor">
+
+                </select>
+             </div>
+          <div class="layui-col-md6">
+            <select name="floorno" lay-verify="" id="floorno" lay-filter="floorno">
+                <option value="1">1层</option>
+            </select>
+          </div>
+    </div>
+  </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">房间类型</label>
+              <div class="layui-input-block" id="room_type_id">
+              </div>
+            </div>
+
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit="" lay-filter="LAY-room-back-submit" value="保存" class="layui-btn">
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'form'], function(){
+  var $ = layui.$
+  ,form = layui.form;
+
+  //房间类型
+    $.ajax({
+      type:"POST",
+      url:"/roomtype_all/",
+      data:{},
+      dataType:"json",
+      success:function (d) {
+          if(d.code==0) {
+              var arr=new Array();
+              $('#room_type_id').empty();
+              $.each(d.data, function (index,f) {
+                  arr.push("<input type='radio' name='room_type_id' value='");
+                  arr.push(f.id);
+                  arr.push("'title='");
+                  arr.push(f.typename);
+                  if(index==0){
+                      arr.push("' checked>");
+                  }else
+                  {
+                      arr.push("'>");
+                  }
+
+              });
+              $('#room_type_id').append(arr.join(" "));
+              form.render();
+          }
+      }
+  });
+
+
+  var floors={};
+  $.ajax({
+      type:"POST",
+      url:"/floor_all/",
+      data:{},
+      dataType:"json",
+      success:function (d) {
+          if(d.code==0) {
+              floors = d.data;
+              var arr=new Array();
+              $('#floor').empty();
+              $.each(d.data, function (index,f) {
+                  arr.push("<option value='");
+                  arr.push(f.id);
+                  arr.push("'>");
+                  arr.push(f.name);
+                  arr.push("</option>");
+              });
+              $('#floor').append(arr.join(" "));
+              form.render('select');
+          }
+      }
+  });
+
+
+  form.on('select(floor)', function(data) {
+      var floorid = data.value;
+      var floorno = 1;
+       for(var i=0;i<floors.length;i++){
+         if(floors[i].id==floorid){
+               floorno = floors[i].floorno;
+               break;
+           }
+       }
+
+       var arr=new Array();
+       $('#floorno').empty();
+      for(var n=1;n<=floorno;n++){
+                  arr.push("<option value='");
+                  arr.push(n);
+                  arr.push("'>");
+                  arr.push(n);
+                  arr.push("层</option>");
+              }
+
+              $('#floorno').append(arr.join(" "));
+             form.render('select');
+  });
+
+
+
+
+});
+</script>

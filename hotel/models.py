@@ -23,13 +23,14 @@ class CheckIn(models.Model):
 
 class Custumer(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
-    sex = models.CharField(max_length=255, blank=True, null=True)
+    sex = models.IntegerField(blank=True, null=True)
     idcard = models.CharField(max_length=255, blank=True, null=True)
     tel = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     pho = models.TextField(blank=True, null=True)
     updatetime = models.DateTimeField(blank=True, null=True)
     createtime = models.DateTimeField(blank=True, null=True)
+    type = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
