@@ -1,7 +1,7 @@
 /** layuiAdmin.pro-v1.2.1 LPPL License By http://www.layui.com/admin/ */
 ;layui.define(["table", "form"], function (e) {
     var i = (layui.$, layui.admin), t = layui.view, l = layui.table, r = layui.form;
-    //楼房信息管理
+    //楼房信息管理表格
     l.render({//楼房信息管理的表格
         elem: "#LAY-floor-back-manage",
         url: "/floors/",
