@@ -9,9 +9,9 @@
       "name": "rooms"
       ,"title": "房态图"
     }, {
-      "name": "homepage2"
+      "name": "checkin"
       ,"title": "入住管理"
-      ,"jump": "home/homepage2"
+      ,"jump": "hotelMange/checkin/list"
     }, {
       "name": "homepage2"
       ,"title": "退房管理"

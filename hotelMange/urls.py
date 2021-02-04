@@ -21,6 +21,7 @@ from hotel import views_base_floor
 from hotel import views_base_roomtype
 from hotel import views_base_room
 from hotel import views_base_custumer
+from hotel import views_base_checkin
 
 
 urlpatterns = [
@@ -48,9 +49,17 @@ urlpatterns = [
     path('room_edit/', views_base_room.edit),
     path('room_del/', views_base_room.delete),
     path('room_batchdel/', views_base_room.batchdel),
+    path('room_all/', views_base_room.get_all_list),
+    path('room_by_f_n/', views_base_room.room_by_f_n),
     path('custumers/', views_base_custumer.get_list),
     path('custumer_add/', views_base_custumer.add),
     path('custumer_edit/', views_base_custumer.edit),
     path('custumer_del/', views_base_custumer.delete),
     path('custumer_batchdel/', views_base_custumer.batchdel),
+    path('custumer_all/', views_base_custumer.get_all_list),
+    path('checkins/', views_base_checkin.get_list),
+    path('checkin_add/', views_base_checkin.add),
+    path('checkin_edit/', views_base_checkin.edit),
+    path('checkin_del/', views_base_checkin.delete),
+    path('checkin_batchdel/', views_base_checkin.batchdel),
 ]

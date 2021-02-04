@@ -100,3 +100,31 @@ def batchdel(request):
     Mo.objects.filter(id__in=ids_list).delete()
     return JsonResponse(result)
 
+# 获取所有数据
+def get_all_list(request):
+    #   到数据库去查找数据
+    values = Mo.objects.all().values()
+    datas = list(values)
+    total = len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
+
+
+# 获取所有数据
+def room_by_f_n(request):
+    floorid = request.POST.get("floorid")
+    floorno = request.POST.get("floorno")
+    #   到数据库去查找数据
+    values = Mo.objects.filter(floorid=floorid,floorno=floorno).values()
+    datas = list(values)
+    total = len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
