@@ -5,7 +5,7 @@ from hotel.models import CheckIn as Mo
 
 import json
 
-# 客户入住管理
+# 客户入住、退房管理
 
 
 # 获取数据列表
@@ -116,3 +116,27 @@ def get_all_list(request):
         result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
     return JsonResponse(result)
 
+
+# 获取退房数据列表
+def get_out_list(request):
+    #   获取页面提交的数据
+    page = int(request.GET.get("page"))
+    limit = int(request.GET.get("limit"))
+    typename = request.GET.get("typename")
+    if typename:
+        #   到数据库去查找数据
+        values = Mo.objects.filter(typename__contains=typename)[(page-1)*limit:limit*page].values()
+        datas = list(values)
+        total =len(datas)
+    else:
+        #   到数据库去查找数据
+        values = Mo.objects.all()[(page-1)*limit:limit*page].values()
+        datas = list(values)
+        total =len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+
+    return JsonResponse(result)

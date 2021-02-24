@@ -128,6 +128,66 @@
             }
         })
     }),
-
+ // 客户退房管理
+    l.render({//客户退房管理的表格
+        elem: "#LAY-checkout-back-manage",
+        url: "/checkouts/",
+        cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
+            field: "custumer_id",
+            title: "客户"
+        }, {
+            field: "room_id",
+            title: "房间"
+        }, {
+            field: "time_in",
+            title: "入住时间"
+        }, {
+            field: "day",
+            title: "入住天数"
+        }, {
+            field: "time_out",
+            title: "退房时间"
+        }
+            , {field: "updatetime", title: "更新时间", sort: !0}
+            ,  {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-checkout-admin"}]],
+        text: "对不起，加载出现异常！"
+    }), l.on("tool(LAY-checkout-back-manage)", function (e) {
+        var l = e.data;
+        "del" === e.event ?  layer.confirm("确定删除？", function (i) {
+                   //提交 Ajax 成功后，关闭当前弹层并重载表格
+               layui.admin.req({
+                  type:"POST",
+                  url:"/checkout_del/",
+                  data:{"id":l.id},
+                  dataType:"json",
+                  success:function (r) {
+                      layer.alert(r.msg);
+                      layui.table.reload("LAY-checkout-back-manage");
+                  }
+              })
+                    , e.del()
+                    , layer.close(i)
+        }) : "edit" === e.event && i.popup({
+            title: "编辑客户入住信息",
+            area: ['850px', '600px'],
+            id: "LAY-popup-checkout-add",
+            success: function (e, i) {
+                t(this.id).render("hotelMange/checkout/addform", l).done(function () {
+                    r.render(null, "layuiadmin-form-checkout"), r.on("submit(LAY-checkout-back-submit)", function (e) {
+                         layui.admin.req({
+                                            type:"post",
+                                            url:"/checkout_edit/",
+                                            data:e.field,
+                                            dataType:"json",
+                                            success:function (r) {
+                                                layer.alert(r.msg);
+                                                layui.table.reload("LAY-checkout-back-manage");
+                                            }
+                                         }), layer.close(i)
+                    })
+                })
+            }
+        })
+    }),
         e("hotelmanage", {})
 });

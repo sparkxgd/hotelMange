@@ -62,4 +62,5 @@ urlpatterns = [
     path('checkin_edit/', views_base_checkin.edit),
     path('checkin_del/', views_base_checkin.delete),
     path('checkin_batchdel/', views_base_checkin.batchdel),
+    path('checkouts/', views_base_checkin.get_out_list),
 ]

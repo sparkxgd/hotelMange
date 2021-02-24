@@ -15,7 +15,7 @@
     }, {
       "name": "homepage2"
       ,"title": "退房管理"
-      ,"jump": "home/homepage2"
+      ,"jump": "hotelMange/checkout/list"
     }, {
       "name": "custumer"
       ,"title": "客户管理"
