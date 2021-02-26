@@ -122,5 +122,5 @@
         layer.prompt({title: "回复留言 ID:" + a, formType: 2}, function (e, a) {
             layer.msg("得到：" + e), layer.close(a)
         })
-    }, e("sample", {})
+    }, e("checkinchart", {})
 });

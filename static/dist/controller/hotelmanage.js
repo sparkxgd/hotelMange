@@ -1,6 +1,35 @@
 /** layuiAdmin.pro-v1.2.1 LPPL License By http://www.layui.com/admin/ */
 ;layui.define(["table", "form"], function (e) {
     var i = (layui.$, layui.admin), t = layui.view, l = layui.table, r = layui.form;
+    layui.use(["carousel", "echarts"], function () {
+        var e = layui.$, a = (layui.carousel, layui.echarts), l = [], t = [{
+            tooltip: {trigger: "axis"},
+            calculable: !0,
+            legend: {data: ["访问量", "下载量", "平均访问量"]},
+            xAxis: [{
+                type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+            }],
+            yAxis: [{type: "value", name: "访问量", axisLabel: {formatter: "{value} 万"}}, {
+                type: "value",
+                name: "下载量",
+                axisLabel: {formatter: "{value} 万"}
+            }],
+            series: [{
+                name: "访问量",
+                type: "line",
+                data: [900, 850, 950, 1e3, 1100, 1050, 1e3, 1150, 1250, 1370, 1250, 1100]
+            }, {
+                name: "下载量",
+                type: "line",
+                yAxisIndex: 1,
+                data: [850, 850, 800, 950, 1e3, 950, 950, 1150, 1100, 1240, 1e3, 950]
+            }, {name: "平均访问量", type: "line", data: [870, 850, 850, 950, 1050, 1e3, 980, 1150, 1e3, 1300, 1150, 1e3]}]
+        }], i = e("#LAY-index-pagetwo").children("div"), n = function (e) {
+            l[e] = a.init(i[e], layui.echartsTheme), l[e].setOption(t[e]), window.onresize = l[e].resize
+        };
+        i[0] && n(0)
+    }),
      // 客户管理
     l.render({//客户管理的表格
         elem: "#LAY-custumer-back-manage",

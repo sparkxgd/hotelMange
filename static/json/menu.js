@@ -27,14 +27,14 @@
     "title": "统计中心"
     ,"icon": "layui-icon-survey"
     ,"list": [{
-      "name": "homepage1"
+      "name": "checkinStatistics"
       ,"title": "入住统计"
        ,"icon": "layui-icon-survey"
-      ,"jump": "home/homepage1"
+      ,"jump": "hotelMange/statistics/checkin/list"
     }, {
-      "name": "homepage2"
+      "name": "incomeStatistics"
       ,"title": "收支统计"
-      ,"jump": "home/homepage2"
+      ,"jump": "hotelMange/statistics/income/list"
     }]
   },
     {
