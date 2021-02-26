@@ -218,5 +218,70 @@
             }
         })
     }),
+        // 收支管理
+    l.render({//收支管理的表格
+        elem: "#LAY-income-back-manage",
+        url: "/incomes/",
+        cols: [[
+            {type: "checkbox", fixed: "left"},
+            {field: "id", width: 80, title: "编号", sort: !0},
+            {
+            field: "money",
+            title: "金额"
+        }, {
+            field: "type",
+            title: "收/支",
+                templet: "#typeTpl"
+        }, {
+            field: "create_time",
+            title: "发生时间"
+        }, {
+            field: "in_type",
+            title: "支付类型",
+                templet: "#intypeTpl"
+        }, {
+            field: "remark",
+            title: "备注"
+        },
+            {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-income-admin"}]],
+        text: "对不起，加载出现异常！"
+    }), l.on("tool(LAY-income-back-manage)", function (e) {
+        var l = e.data;
+        "del" === e.event ?  layer.confirm("确定删除？", function (i) {
+                   //提交 Ajax 成功后，关闭当前弹层并重载表格
+               layui.admin.req({
+                  type:"POST",
+                  url:"/checkout_del/",
+                  data:{"id":l.id},
+                  dataType:"json",
+                  success:function (r) {
+                      layer.alert(r.msg);
+                      layui.table.reload("LAY-income-back-manage");
+                  }
+              })
+                    , e.del()
+                    , layer.close(i)
+        }) : "edit" === e.event && i.popup({
+            title: "编辑收支信息",
+            area: ['850px', '600px'],
+            id: "LAY-popup-checkout-add",
+            success: function (e, i) {
+                t(this.id).render("hotelMange/income/addform", l).done(function () {
+                    r.render(null, "layuiadmin-form-income"), r.on("submit(LAY-income-back-submit)", function (e) {
+                         layui.admin.req({
+                                            type:"post",
+                                            url:"/checkout_edit/",
+                                            data:e.field,
+                                            dataType:"json",
+                                            success:function (r) {
+                                                layer.alert(r.msg);
+                                                layui.table.reload("LAY-income-back-manage");
+                                            }
+                                         }), layer.close(i)
+                    })
+                })
+            }
+        })
+    }),
         e("hotelmanage", {})
 });

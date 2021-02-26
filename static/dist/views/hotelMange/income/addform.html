@@ -1,0 +1,171 @@
+<div class="layui-form" lay-filter="layuiadmin-form-checkout" style="padding: 20px 30px 0 0;">
+  <div class="layui-form-item">
+    <label class="layui-form-label">客户</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+          <input type="hidden" name="id" value="{{ d.params.id}}">
+          <select name="custumer_id" lay-verify="" id="custumer_id" lay-filter="custumer_id">
+
+          </select>
+      </script>
+    </div>
+  </div>
+  <div class="layui-form-item">
+      <label class="layui-form-label">楼房</label>
+      <div class="layui-input-inline">
+          <select name="floorid" lay-verify="" id="floor" lay-filter="floor">
+          </select>
+          </div>
+      <div class="layui-input-inline">
+            <select name="floorno" lay-verify="" id="floorno" lay-filter="floorno">
+                <option value="1">1层</option>
+            </select>
+      </div>
+      <div class="layui-input-inline">
+          <select name="room_id" lay-verify="" id="room_id" lay-filter="room_id">
+            </select>
+    </div>
+  </div>
+
+          <div class="layui-form-item">
+    <label class="layui-form-label">入住天数</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+        <input type="text" name="day" value="{{ d.params.day|| '' }}" lay-verify="required" placeholder="请输入天数" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+      <div class="layui-form-item">
+    <label class="layui-form-label">入住时间</label>
+    <div class="layui-input-inline">
+      <script type="text/html" template="">
+        <input type="text" id="time_in" name="time_in" value="{{ d.params.time_in|| '' }}" lay-verify="datetime" placeholder="yyyy-MM-dd hh:mm:ss" autocomplete="off" class="layui-input">
+      </script>
+    </div>
+  </div>
+
+
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit="" lay-filter="LAY-checkout-back-submit" value="保存" class="layui-btn">
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'form','laydate'], function(){
+  var $ = layui.$,
+      laydate = layui.laydate
+  ,form = layui.form;
+  //日期
+  laydate.render({
+      elem: '#time_in'
+  ,type: 'datetime'
+  });
+
+      //客户信息列表
+    $.ajax({
+      type:"POST",
+      url:"/custumer_all/",
+      data:{},
+      dataType:"json",
+      success:function (d) {
+          if(d.code==0) {
+              var arr=new Array();
+              $('#custumer_id').empty();
+              $.each(d.data, function (index,f) {
+                  arr.push("<option value='");
+                  arr.push(f.id);
+                  arr.push("'>");
+                  arr.push(f.name);
+                  arr.push("</option>");
+              });
+              $('#custumer_id').append(arr.join(" "));
+              form.render('select');
+          }
+      }
+  });
+
+  var floors={};
+  var curr_f = null;//当前选择的楼房
+  $.ajax({
+      type:"POST",
+      url:"/floor_all/",
+      data:{},
+      dataType:"json",
+      success:function (d) {
+          if(d.code==0) {
+              floors = d.data;
+              var arr=new Array();
+              $('#floor').empty();
+              $.each(d.data, function (index,f) {
+                  arr.push("<option value='");
+                  arr.push(f.id);
+                  if(index==0){
+                      curr_f=f.id;
+                  }
+                  arr.push("'>");
+                  arr.push(f.name);
+                  arr.push("</option>");
+              });
+              $('#floor').append(arr.join(" "));
+              form.render('select');
+          }
+      }
+  });
+
+
+  form.on('select(floor)', function(data) {
+      var floorid = data.value;
+      curr_f=floorid;
+      var floorno = 1;
+       for(var i=0;i<floors.length;i++){
+         if(floors[i].id==floorid){
+               floorno = floors[i].floorno;
+               break;
+           }
+       }
+
+       var arr=new Array();
+       $('#floorno').empty();
+      for(var n=1;n<=floorno;n++){
+                  arr.push("<option value='");
+                  arr.push(n);
+                  arr.push("'>");
+                  arr.push(n);
+                  arr.push("层</option>");
+              }
+
+              $('#floorno').append(arr.join(" "));
+             form.render('select');
+  });
+
+  //房间
+  form.on('select(floorno)', function(data) {
+      var floorno = data.value;
+        $.ajax({
+          type:"POST",
+          url:"/room_by_f_n/",
+          data:{"floorid":curr_f,"floorno":floorno},
+          dataType:"json",
+          success:function (d) {
+              if(d.code==0) {
+                  var arr=new Array();
+                  $('#room_id').empty();
+                  $.each(d.data, function (index,f) {
+                      arr.push("<option value='");
+                      arr.push(f.id);
+                      arr.push("'>");
+                      arr.push(f.room);
+                      arr.push("</option>");
+                  });
+                  $('#room_id').append(arr.join(" "));
+                  form.render('select');
+              }
+          }
+      });
+  });
+
+});
+</script>

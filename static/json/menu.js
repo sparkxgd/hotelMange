@@ -20,6 +20,10 @@
       "name": "custumer"
       ,"title": "客户管理"
       ,"jump": "hotelMange/custumer/list"
+    }, {
+      "name": "income"
+      ,"title": "收支管理"
+      ,"jump": "hotelMange/income/list"
     }]
   },
 
