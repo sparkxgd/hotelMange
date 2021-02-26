@@ -52,10 +52,11 @@ class Floor(models.Model):
 
 
 class Income(models.Model):
-    income = models.IntegerField(blank=True, null=True)
-    income_time = models.DateTimeField(blank=True, null=True)
-    income_type = models.IntegerField(blank=True, null=True)
+    money = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    create_time = models.DateTimeField(blank=True, null=True)
+    in_type = models.IntegerField(blank=True, null=True)
     remark = models.CharField(max_length=255, blank=True, null=True)
+    type = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
