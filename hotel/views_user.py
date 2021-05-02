@@ -93,6 +93,7 @@ def batchdel(request):
     Mo.objects.filter(id__in=ids_list).delete()
     return JsonResponse(result)
 
+
 #   登录
 def login(request):
     username = request.GET.get("username")
