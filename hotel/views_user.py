@@ -96,7 +96,6 @@ def batchdel(request):
 
 #   登录
 def login(request):
-    result = {"code": 0, "msg": "登录成功！"}
     username = request.GET.get("username")
     password = request.GET.get("password")
     u = Mo.objects.filter(username=username,password=password)[0]
