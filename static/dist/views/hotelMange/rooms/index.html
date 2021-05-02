@@ -1,120 +1,138 @@
-
 <title>房态图</title>
 
 <style>
-.roomsinfo{
-    padding-top: 6px;
-    padding-left: 20px;
-    background-color: 	#F5DEB3;
-}
-.roomsinfo span{
-    font-size: 17px;
-    margin-left: 15px;
-}
-.roomsinfo span label{
-    font-size: 20px;
-    color: red;
-}
-.rooms .layui-card{height: 80px;}
-    .layui-form-item .layui-inline{
+    .roomsinfo {
+        text-align: center;
+        padding-top: 6px;
+        padding-left: 20px;
+        border-bottom: 1px solid green;
+    }
+
+    .roomsinfo span {
+        font-size: 22px;
+        margin-left: 15px;
+    }
+
+    .roomsinfo span label {
+        font-size: 20px;
+        color: red;
+    }
+
+    .rooms .layui-card {
+        height: 80px;
+    }
+
+    .layui-form-item .layui-inline {
         width: 200px;
         margin-left: 0px;
         margin-right: 0px;
         margin-top: 10px;
     }
-    .layui-form-label{
+
+    .layui-form-label {
         width: 70px;
     }
-    .toolsbs{
+
+    .toolsbs {
         text-align: right;
         padding-right: 10px;
     }
-    .infotools{
+
+    .infotools {
         padding-top: 10px;
+    }
+
+    .roomNo {
+        font-size: 20px;
+    }
+
+    .room-card {
+        border: 2px solid darkolivegreen;
+        border-radius: 5px;
+    }
+
+    .room-card p {
+        text-align: center;
+        margin-top: 3px;
+    }
+
+    .room-card:hover {
+        cursor: pointer;
+        border: 2px solid blueviolet;
+    }
+
+    .selectRoom {
+        border: 2px solid red;
     }
 </style>
 
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb">
-    <a lay-href="">主页</a>
-    <a><cite>酒店管理</cite></a>
-    <a><cite>房态图</cite></a>
-  </div>
+    <div class="layui-breadcrumb" lay-filter="breadcrumb">
+        <a lay-href="">主页</a>
+        <a><cite>酒店管理</cite></a>
+        <a><cite>房态图</cite></a>
+    </div>
 </div>
 
 <div class="layui-row layui-bg-gray infotools">
     <!-- 信息-->
     <div class="layui-col-md7 roomsinfo">
-        <span>空房:<label>10</label>间</span>
-        <span>入住:<label>10</label>间</span>
-        <span>预留:<label>10</label>间</span>
-        <span>需维修:<label>10</label>间</span>
-        <span>预计今日离开:<label>10</label>间</span>
+        <span>空房:<label id="kong"></label>间</span>
+        <span>入住:<label id="income"></label>间</span>
+        <span>预留:<label id="yuliu"></label>间</span>
+        <span>需维修:<label id="weixiu"></label>间</span>
+        <span>预计今日离开:<label id="out"></label>间</span>
     </div>
     <!-- 操作按钮-->
-    <div class="layui-col-md5 toolsbs">
-        <button type="button" class="layui-btn layui-btn-sm layui-bg-red">入住</button>
-        <button type="button" class="layui-btn layui-btn-sm">退房</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal">调换</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm">保留</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger">取消保留</button>
-        <button type="button" class="layui-btn layui-btn-sm">报修</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal">设定房态</button>
+    <div class="layui-col-md5 toolsbs layui-form" lay-filter="layadmin-userfront-formlist">
+        <button type="button" class="layui-btn layui-btn-sm layui-bg-red" data-type="income">入住</button>
+        <button type="button" class="layui-btn layui-btn-sm" data-type="outroom">退房</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-type="changeRoom">调换</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" data-type="baoliu">预留</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-type="quexiaobaoliu">取消预留</button>
+        <button type="button" class="layui-btn layui-btn-sm" data-type="baoxiu">报修</button>
+        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-type="setStatus">设定房态</button>
     </div>
 </div>
 <!--搜索-->
 <div class="layui-form">
-    <div class="layui-form-item">
-        <div class="layui-inline">
-            <label class="layui-form-label">房间状态</label>
-            <div class="layui-input-block">
-                <select name="roomStatus">
-                      <option value="0">不限</option>
-                      <option value="1">空闲</option>
-                      <option value="2">入住</option>
-                </select>
-            </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">房间状态</label>
+        <div class="layui-input-inline">
+            <select name="roomStatus">
+                <option value="100">不限</option>
+                <option value="0">空闲</option>
+                <option value="1">入住</option>
+                <option value="2">预留</option>
+                <option value="-2">维修</option>
+            </select>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">类型</label>
-            <div class="layui-input-block">
-                <select name="roomType">
-                      <option value="0">--不限--</option>
-                      <option value="1">豪华单间</option>
-                      <option value="2">标准双人</option>
-                </select>
-            </div>
+    </div>
+    <div class="layui-inline">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-inline">
+            <select name="roomType" lay-verify="" id="room_type" lay-filter="roomType">
+            </select>
         </div>
-        <div class="layui-inline">
-            <label class="layui-form-label">楼层</label>
-            <div class="layui-input-block">
-                <select name="roomNum">
-                      <option value="0">--不限--</option>
-                      <option value="1">一楼</option>
-                      <option value="2">二楼</option>
-                    <option value="3">三楼</option>
-                    <option value="4">四楼</option>
-                </select>
-            </div>
-        </div>
-        <div class="layui-inline">
-          <label class="layui-form-label">房间号</label>
-          <div class="layui-input-block">
+    </div>
+
+    <div class="layui-inline">
+        <label class="layui-form-label">房间号</label>
+        <div class="layui-input-inline">
             <input type="text" name="roomNo" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
         </div>
-        <div class="layui-inline">
-          <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
+    </div>
+    <div class="layui-inline">
+        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-rooms-back-search">
             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-          </button>
-        </div>
+        </button>
     </div>
 </div>
 <!--房态图--->
 <div class="layui-fluid">
     <div class="layui-row layui-col-space10 rooms">
         <div class="layui-col-md1">
-            <div class="layui-card layui-bg-green">
+            <div class="layui-card layui-bg-green room-card">
                 <div class="layui-card-header">8088</div>
                 <div class="layui-card-body">
                     <p class="layuiadmin-big-font">豪华单人间</p>
@@ -123,14 +141,14 @@
             </div>
         </div>
         <div class="layui-col-md1">
-            <div class="layui-card layui-bg-orange">
+            <div class="layui-card layui-bg-orange room-card">
                 <p>8089</p>
                 <p>豪华单人间</p>
                 <p>空</p>
             </div>
         </div>
         <div class="layui-col-md1">
-            <div class="layui-card layui-bg-red">
+            <div class="layui-card layui-bg-red room-card">
                 <p>8089</p>
                 <p>豪华单人间</p>
                 <p>空</p>
@@ -146,38 +164,276 @@
     </div>
 
 </div>
-
+<input id="roomid" value='' type='hidden'>
 <script>
-layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin'], function(){
-  var $ = layui.$
-  ,admin = layui.admin
-  ,form = layui.form;
+    layui.use('useradmin', layui.factory('useradmin')).use(['admin', 'useradmin'], function () {
+        var $ = layui.$
+            , admin = layui.admin
+            , view = layui.view
+            , form = layui.form;
+        var selectRoom = [];
+        form.render(null, 'layadmin-userfront-formlist');
 
-  form.render(null, 'layadmin-userfront-formlist');
-   $.get("/room_all/",  {"area":"area","day":"day","month":"month"}, function (d) {
-       if(d.code==0) {
-              var arr=new Array();
-              $('.rooms').empty();
-              $.each(d.data, function (index,f) {
-                  arr.push("<div class='layui-col-md1'>");
-                  arr.push("<div class='layui-card layui-bg-green'>");
-                  arr.push("<p>");
-                  arr.push(f.room);
-                  arr.push("</p>");
-                  arr.push("<p>");
-                  arr.push(f.room_type_id);
-                  arr.push("</p>");
-                  arr.push("<p>");
-                  arr.push(f.status);
-                  arr.push("</p>");
-                  arr.push("</div></div>");
+        var init = {
+            init: function (query) {
 
-              });
-              $('.rooms').append(arr.join(" "));
-              form.render();
-          }
+                var q={"roomStatus":100,"roomType":-1};
+                if(query){
+                    if(query.roomNo==''){
+                        q = {"roomStatus":query.roomStatus,"roomType":query.roomType}
+                    }else {
+                        q = {"roomStatus":query.roomStatus,"roomType":query.roomType,"roomNo":query.roomNo}
+                    }
+                }
+                $.get("/room_all/", q, function (d) {
+                    $('.rooms').empty();
+                    var arr = new Array();
+                    if (d.code == -1) {
+                        arr.push("<div>暂无数据！！！！！</div>");
+                         $('.rooms').append(arr.join(" "));
+                          layer.msg('暂无数据！！！！！');
+                    }else  {
+                        var kong = 0;//空房
+                        var income = 0;//入住
+                        var yuliu = 0;//预留
+                        var weixiu = 0;//维修
+                        var out = 0;//离开
 
-   });
+                        $.each(d.data, function (index, f) {
 
-});
+                            arr.push("<div class='layui-col-md1'>");
+                            if (f.status == -1) {
+                                arr.push("<div class='layui-card layui-bg-orange room-card'>");
+                            } else if (f.status == 1) {
+                                arr.push("<div class='layui-card layui-bg-green room-card'>");
+                            } else if (f.status == -2) {
+                                arr.push("<div class='layui-card layui-bg-red room-card'>");
+                            } else if (f.status == 2) {
+                                arr.push("<div class='layui-card layui-bg-blue room-card'>");
+                            } else {
+                                arr.push("<div class='layui-card layui-bg-gray room-card'>");
+                            }
+                            arr.push("<input value='" + f.id + "' type='hidden'>");
+                            arr.push("<p class='roomNo'>");
+                            arr.push(f.room);
+                            arr.push("</p>");
+                            arr.push("<p>");
+                            arr.push(f.room_type_id__typename);
+                            arr.push("</p>");
+                            arr.push("<p>");
+                            //状态0：空闲，-1：异常，1：入住，-2：未打扫，2：保留
+                            if (f.status == -1) {
+                                arr.push("异常");
+                                weixiu++;
+                            } else if (f.status == 1) {
+                                arr.push("已入住");
+                                income++;
+                            } else if (f.status == -2) {
+                                arr.push("未清理");
+                            } else if (f.status == 2) {
+                                arr.push("预留");
+                                yuliu++;
+                            } else {
+                                arr.push("空闲");
+                                kong++;
+                            }
+                            arr.push("</p>");
+                            arr.push("</div></div>");
+
+                        });
+                        $('.rooms').append(arr.join(" "));
+
+                        $('#kong').empty();
+                        $('#yuliu').empty();
+                        $('#income').empty();
+                        $('#weixiu').empty();
+                        $('#out').empty();
+
+                        $('#kong').append(kong);
+                        $('#yuliu').append(yuliu);
+                        $('#income').append(income);
+                        $('#weixiu').append(weixiu);
+                        $('#out').append(income);
+
+
+                        form.render();
+
+                        $('.room-card').on('click', function () {
+
+                            var v = $(this).children()[0].value;
+                            if (!selectRoom.includes(v)) {
+                                $(this).addClass("selectRoom");
+                                selectRoom.push(v);
+                            } else {
+                                var local = $.inArray(v, selectRoom); //根据元素值查找下标，不存在返回-1
+                                selectRoom.splice(local, 1);//根据下标删除一个元素   1表示删除一个元素
+                                $(this).removeClass("selectRoom");
+                            }
+                        });
+                    }
+
+                });
+            }
+        };
+
+        init.init(null);
+
+        $.ajax({
+            type: "POST",
+            url: "/roomtype_all/",
+            data: {},
+            dataType: "json",
+            success: function (d) {
+                if (d.code == 0) {
+                    var arr = new Array();
+                    $('#room_type').empty();
+                    arr.push("<option value='-1' >不限</option>");
+                    $.each(d.data, function (index, f) {
+                        arr.push("<option value=");
+                        arr.push(f.id);
+                        arr.push(">");
+                        arr.push(f.typename);
+                        arr.push("</option>");
+                    });
+                    $('#room_type').append(arr.join(" "));
+                    form.render('select');
+                }
+            }
+        });
+
+        //监听搜索
+        form.on('submit(LAY-rooms-back-search)', function (data) {
+            var field = data.field;
+            //执行重载
+            init.init(field);
+        });
+
+        //事件
+        var active = {
+            //保修方法
+            baoxiu: function () {
+                if (selectRoom.length === 0) {
+                    layer.msg('请选择房间');
+                    return
+                }
+                admin.popup({
+                    title: '报修'
+                    , area: ['420px', '450px']
+                    , id: 'LAY-popup-baoxiu-add'
+                    , success: function (layero, index) {
+                        view(this.id).render('baseMange/room/baoxiu', {id: selectRoom[0]}).done(function () {
+                            form.render(null, 'layuiadmin-form-baoxiu');
+                            //监听提交
+                            form.on('submit(LAY-baoxiu-back-submit)', function (data) {
+                                var field = data.field; //获取提交的字段
+                                //提交 Ajax 成功后，关闭当前弹层并重载表格
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/room_baoxiu/",
+                                    data: field,
+                                    dataType: "json",
+                                    success: function (d) {
+                                        if (d.code == -1) {
+                                            layer.msg(d.msg);
+                                        } else {
+                                            layer.close(index); //执行关闭
+                                            layui.index.render()
+                                        }
+                                    }
+                                });
+
+                            });
+                        });
+                    }
+                });
+            },
+            //保留
+            baoliu: function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/room_baoliu/",
+                    data: {"status": 2, "id": selectRoom[0]},
+                    dataType: "json",
+                    success: function (d) {
+                        //显示自动关闭倒计秒数
+                        layer.alert(d.msg, {
+                            time: 3 * 1000
+                            , end: function () {
+                                //刷新页面
+                                layui.index.render();
+                            }
+                        });
+                    }
+                });
+            },
+            //取消保留
+            quexiaobaoliu: function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/room_baoliu/",
+                    data: {"status": 0, "id": selectRoom[0]},
+                    dataType: "json",
+                    success: function (d) {
+                        //显示自动关闭倒计秒数
+                        layer.alert(d.msg, {
+                            time: 3 * 1000
+                            , end: function () {
+                                //刷新页面
+                                layui.index.render();
+                            }
+                        });
+                    }
+                });
+            },
+            //入住
+            income: function () {
+                location.hash = '/hotelMange/checkin/list'; //入住页面
+            },
+            //设定房态
+            setStatus: function () {
+                if (selectRoom.length === 0) {
+                    layer.msg('请选择房间');
+                    return
+                }
+                admin.popup({
+                    title: '设定房态'
+                    , area: ['600px', '450px']
+                    , id: 'LAY-popup-setStatus-add'
+                    , success: function (layero, index) {
+                        view(this.id).render('baseMange/room/setStatus', {id: selectRoom[0]}).done(function () {
+                            form.render(null, 'layuiadmin-form-setStatus');
+                            //监听提交
+                            form.on('submit(LAY-setStatus-back-submit)', function (data) {
+                                var field = data.field; //获取提交的字段
+                                //提交 Ajax 成功后，关闭当前弹层并重载表格
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/room_setStatus/",
+                                    data: field,
+                                    dataType: "json",
+                                    success: function (d) {
+                                        if (d.code == -1) {
+                                            layer.msg(d.msg);
+                                        } else {
+                                            layer.close(index); //执行关闭
+                                            layui.index.render()
+                                        }
+                                    }
+                                });
+
+                            });
+                        });
+                    }
+                });
+            },
+
+
+        };
+        $('.layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+
+    });
 </script>

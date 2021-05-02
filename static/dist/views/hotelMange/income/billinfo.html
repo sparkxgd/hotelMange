@@ -1,0 +1,181 @@
+<div class="layui-form" lay-filter="layuiadmin-form-billinfo" style="padding: 20px 30px 0 0;">
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+        <legend>账单信息</legend>
+    </fieldset>
+
+    <script type="text/html" template="">
+        <div class="layui-bg-gray" style="padding: 30px;">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-md6">
+                    <div class="layui-panel">
+                        <div style="padding: 50px 30px;">
+                            账单编号：<span class="layui-badge-rim">{{ d.params.bill__id }}</span><br>
+                            入住房间：<span class="layui-badge-rim">{{ d.params.room_id__room }}</span><br>
+                            入住天数：<span class="layui-badge-rim">{{ d.params.day }}</span><br>
+                            入住客户：<span class="layui-badge-rim">{{ d.params.custumer_id__name }}</span><br>
+                            实际费用：<span class="layui-badge layui-bg-green">{{ d.params.bill__money }}元</span><br>
+                            已欠费用：<span class="layui-badge">{{ d.params.bill__money-d.params.bill__inmoney }}元</span><br>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-panel">
+                        <div style="padding: 50px 30px;">
+                            {{# if(d.bill__status == 0){ }}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">付款金额</label>
+                                <div class="layui-input-inline">
+                                    <input type="hidden" name="bill" value="{{ d.params.bill__id }}">
+                                    <input type="hidden" name="remark" value="{{ d.params.custumer_id__name }}">
+                                    <input type="text" name="money" lay-verify="required" placeholder="请输入"
+                                           autocomplete="off" class="layui-input"
+                                           value="{{ d.params.bill__money-d.params.bill__inmoney }}">
+
+                                </div>
+                                <div class="layui-form-mid layui-word-aux">元</div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">支付方式</label>
+                                <div class="layui-input-block">
+                                    <!-- 1：现金，2：支付宝，3：微信，4：银行卡-->
+                                    <input type="radio" name="inType" value="1" title="现金" checked>
+                                    <input type="radio" name="inType" value="3" title="微信">
+                                    <input type="radio" name="inType" value="2" title="支付宝">
+                                    <input type="radio" name="inType" value="4" title="银行卡">
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label"></label>
+                                <div class="layui-input-inline">
+                                    <input type="button" lay-submit="" lay-filter="LAY-billinfo-back-submit" value="缴费"
+                                           class="layui-btn layui-btn-sm"><br></div>
+                            </div>
+                        </div>
+                        {{# } else { }}
+                        没有欠费，非常感谢您的配合  感谢！！！
+                        {{# } }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+</div>
+
+<script>
+    layui.use(['admin', 'form', 'laydate'], function () {
+        var $ = layui.$,
+            laydate = layui.laydate
+            , form = layui.form;
+        //日期
+        laydate.render({
+            elem: '#time_in'
+            , type: 'datetime'
+        });
+
+        //客户信息列表
+        $.ajax({
+            type: "POST",
+            url: "/custumer_all/",
+            data: {},
+            dataType: "json",
+            success: function (d) {
+                if (d.code == 0) {
+                    var arr = new Array();
+                    $('#custumer_id').empty();
+                    $.each(d.data, function (index, f) {
+                        arr.push("<option value='");
+                        arr.push(f.id);
+                        arr.push("'>");
+                        arr.push(f.name);
+                        arr.push("</option>");
+                    });
+                    $('#custumer_id').append(arr.join(" "));
+                    form.render('select');
+                }
+            }
+        });
+
+        var floors = {};
+        var curr_f = null;//当前选择的楼房
+        $.ajax({
+            type: "POST",
+            url: "/floor_all/",
+            data: {},
+            dataType: "json",
+            success: function (d) {
+                if (d.code == 0) {
+                    floors = d.data;
+                    var arr = new Array();
+                    $('#floor').empty();
+                    $.each(d.data, function (index, f) {
+                        arr.push("<option value='");
+                        arr.push(f.id);
+                        if (index == 0) {
+                            curr_f = f.id;
+                        }
+                        arr.push("'>");
+                        arr.push(f.name);
+                        arr.push("</option>");
+                    });
+                    $('#floor').append(arr.join(" "));
+                    form.render('select');
+                }
+            }
+        });
+
+
+        form.on('select(floor)', function (data) {
+            var floorid = data.value;
+            curr_f = floorid;
+            var floorno = 1;
+            for (var i = 0; i < floors.length; i++) {
+                if (floors[i].id == floorid) {
+                    floorno = floors[i].floorno;
+                    break;
+                }
+            }
+
+            var arr = new Array();
+            $('#floorno').empty();
+            for (var n = 1; n <= floorno; n++) {
+                arr.push("<option value='");
+                arr.push(n);
+                arr.push("'>");
+                arr.push(n);
+                arr.push("层</option>");
+            }
+
+            $('#floorno').append(arr.join(" "));
+            form.render('select');
+        });
+
+        //房间
+        form.on('select(floorno)', function (data) {
+            var floorno = data.value;
+            $.ajax({
+                type: "POST",
+                url: "/room_by_f_n/",
+                data: {"floorid": curr_f, "floorno": floorno},
+                dataType: "json",
+                success: function (d) {
+                    if (d.code == 0) {
+                        var arr = new Array();
+                        $('#room_id').empty();
+                        $.each(d.data, function (index, f) {
+                            arr.push("<option value='");
+                            arr.push(f.id);
+                            arr.push("'>");
+                            arr.push(f.room);
+                            arr.push("</option>");
+                        });
+                        $('#room_id').append(arr.join(" "));
+                        form.render('select');
+                    }
+                }
+            });
+        });
+
+    });
+</script>

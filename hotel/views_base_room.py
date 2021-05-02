@@ -2,6 +2,8 @@ from datetime import datetime
 from django.http import JsonResponse
 
 from hotel.models import Room as Mo
+from django.forms.models import model_to_dict
+
 
 import json
 
@@ -102,10 +104,41 @@ def batchdel(request):
 
 # 获取所有数据
 def get_all_list(request):
-    #   到数据库去查找数据
-    values = Mo.objects.all().values()
-    datas = list(values)
+    roomStatus = request.GET.get("roomStatus")
+    roomType = request.GET.get("roomType")
+    roomNo = request.GET.get("roomNo")
+    datas = []
     total = len(datas)
+    #   到数据库去查找数据
+    if roomStatus=='100' and roomType=='-1' and roomNo==None:
+        values = Mo.objects.all().values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus!='100' and roomType=='-1' and roomNo==None:
+        values = Mo.objects.filter(status=roomStatus).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus=='100' and roomType == '-1' and roomNo!=None:
+        values = Mo.objects.filter(room__icontains=roomNo).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus!='100' and roomType!='-1' and roomNo==None:
+        values = Mo.objects.filter(status=roomStatus,room_type_id=roomType).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus!='100' and roomType=='-1' and roomNo!=None:
+        values = Mo.objects.filter(status=roomStatus,room__icontains=roomNo).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus=='100' and roomType!='-1' and roomNo!=None:
+        values = Mo.objects.filter(room_type_id=roomType,room__icontains=roomNo).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+    if roomStatus=='100' and roomType!='-1' and roomNo==None:
+        values = Mo.objects.filter(room_type_id=roomType).values('id','room','floorno','status','room_type_id','room_type_id__typename')
+        datas = list(values)
+        total = len(datas)
+
     # 构造返回数据
     if total == 0:
         result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
@@ -119,7 +152,7 @@ def room_by_f_n(request):
     floorid = request.POST.get("floorid")
     floorno = request.POST.get("floorno")
     #   到数据库去查找数据
-    values = Mo.objects.filter(floorid=floorid,floorno=floorno).values()
+    values = Mo.objects.filter(floorid=floorid,floorno=floorno).values('id','room','floorno','status','room_type_id','room_type_id__vip_price','room_type_id__price')
     datas = list(values)
     total = len(datas)
     # 构造返回数据
@@ -127,4 +160,94 @@ def room_by_f_n(request):
         result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
     else:
         result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
+
+# 根据状态查询房间
+def room_by_status(request):
+    status = request.GET.get("status")
+    #   到数据库去查找数据
+    values = Mo.objects.filter(status=status).values('id','room','floorno','status','room_type_id','room_type_id__vip_price','room_type_id__price')
+    datas = list(values)
+    total = len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
+
+# 根据房间号查询房间
+def room_by_name(request):
+    room = request.GET.get("room")
+    #   到数据库去查找数据(like查询)
+    values = Mo.objects.filter(room__icontains=room).values('id','room','floorno','status','room_type_id','room_type_id__vip_price','room_type_id__price')
+    datas = list(values)
+    total = len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
+
+
+def rooms_q(request):
+    #   到数据库去查找数据
+    values = Mo.objects.all().values('id','room','floorno','status','room_type_id','room_type_id__vip_price','room_type_id__price')
+    datas = list(values)
+    total = len(datas)
+    # 构造返回数据
+    if total == 0:
+        result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
+    else:
+        result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+    return JsonResponse(result)
+
+
+# 根据id查询房间信息
+def room_by_id(request):
+    id = request.GET.get("id")
+    #   到数据库去查找数据
+    values = Mo.objects.get(id=id)
+    datas = model_to_dict(values)
+    # total = len(datas)
+    # 构造返回数据
+    result = {"code": 0, "msg": "查询成功！！", "count": 1, "data": datas}
+    return JsonResponse(result)
+
+
+#   报修
+def baoxiu(request):
+    result = {"code": 0, "msg": "修改成功！"}
+    #   获取前端的数据
+    id = request.POST.get("id")
+    updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    remark = request.POST.get("remark")
+    #   更新
+    Mo.objects.filter(id=id).update(remark=remark,status=-1,updatetime=updatetime)
+    return JsonResponse(result)
+
+
+#   保留
+def baoliu(request):
+    result = {"code": 0, "msg": "修改成功！"}
+    #   获取前端的数据
+    id = request.POST.get("id")
+    status =request.POST.get("status")
+    # 要注意，入住的时候不能保留
+    updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #   更新
+    Mo.objects.filter(id=id).update(status=status,updatetime=updatetime)
+    return JsonResponse(result)
+
+
+#   保留
+def setStatus(request):
+    result = {"code": 0, "msg": "修改成功！"}
+    #   获取前端的数据
+    id = request.POST.get("id")
+    status =request.POST.get("status")
+    updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #   更新
+    Mo.objects.filter(id=id).update(status=status,updatetime=updatetime)
     return JsonResponse(result)

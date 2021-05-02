@@ -1,0 +1,38 @@
+<div class="layui-form" lay-filter="layuiadmin-form-setStatus" style="padding: 20px 30px 0 0;">
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <label class="layui-form-label">房间号：</label>
+            <script type="text/html" template lay-url="/room_by_id?id={{ d.params.id }}">
+                 <input type="hidden" name="id" value="{{ d.data.id}}">
+                    {{ d.data.room }}
+            </script>
+
+        </div>
+    </div>
+<!-- 状态0：空闲，-1：异常，1：入住，-2：未打扫，2：保留 -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">设置房态</label>
+        <div class="layui-input-block">
+             <input type="radio" title="空闲" value="0" name="status" checked>
+             <input type="radio" title="入住" value="1" name="status">
+             <input type="radio" title="保留" value="2" name="status">
+             <input type="radio" title="未打扫" value="-2" name="status">
+             <input type="radio" title="异常" value="-1" name="status">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label"></label>
+        <div class="layui-input-inline">
+            <input type="button" lay-submit="" lay-filter="LAY-setStatus-back-submit" value="保存" class="layui-btn">
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['admin', 'form'], function () {
+        var $ = layui.$
+            , form = layui.form;
+
+    });
+</script>

@@ -1,0 +1,32 @@
+<div class="layui-form" lay-filter="layuiadmin-form-baoxiu" style="padding: 20px 30px 0 0;">
+    <script type="text/html" template lay-url="/room_by_id?id={{ d.params.id }}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">房间号：</label>
+                    {{ d.data.room }}
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">报修内容：</label>
+            <div class="layui-input-block">
+                    <input type="hidden" name="id" value="{{ d.data.id}}">
+                 <textarea placeholder="请输入内容" class="layui-textarea" name="remark"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <input type="button" lay-submit="" lay-filter="LAY-baoxiu-back-submit" value="保存" class="layui-btn">
+            </div>
+        </div>
+    </script>
+</div>
+
+<script>
+    layui.use(['admin', 'form'], function () {
+        var $ = layui.$
+            , form = layui.form;
+
+    });
+
+</script>

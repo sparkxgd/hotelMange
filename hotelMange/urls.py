@@ -52,6 +52,12 @@ urlpatterns = [
     path('room_batchdel/', views_base_room.batchdel),
     path('room_all/', views_base_room.get_all_list),
     path('room_by_f_n/', views_base_room.room_by_f_n),
+    path('room_by_id/', views_base_room.room_by_id),
+    path('room_baoxiu/', views_base_room.baoxiu),
+    path('room_baoliu/', views_base_room.baoliu),
+    path('room_setStatus/', views_base_room.setStatus),
+    path('room_by_name/', views_base_room.room_by_name),
+    path('rooms_q/', views_base_room.rooms_q),
     path('custumers/', views_base_custumer.get_list),
     path('custumer_add/', views_base_custumer.add),
     path('custumer_edit/', views_base_custumer.edit),
@@ -69,4 +75,5 @@ urlpatterns = [
     path('income_edit/', views_base_income.edit),
     path('income_del/', views_base_income.delete),
     path('income_batchdel/', views_base_income.batchdel),
+    path('bill_income/', views_base_income.bill_income),
 ]

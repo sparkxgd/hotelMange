@@ -2,7 +2,7 @@ import datetime
 from django.http import JsonResponse
 
 from hotel.models import Income as Mo
-
+from hotel.models import Bill
 import json
 
 # 收支管理
@@ -138,5 +138,32 @@ def get_out_list(request):
         result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
     else:
         result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
+
+    return JsonResponse(result)
+
+
+# 账单缴费
+def bill_income(request):
+    # 0：成功，-1：不成功
+    result = {"code": 0, "msg": "操作成功！！"}
+    # 获取页面的数据
+    remark = request.POST.get("remark")
+    money = request.POST.get("money")
+    inType = int(request.POST.get("inType"))
+    bill = request.POST.get("bill")
+    # 判断一下这个楼房是否存在，如果存在，就不能添加（在他入住的时间段内）?
+    # 插到数据库里面
+    m = Mo()
+    m.remark = remark
+    m.money = money
+    m.in_type = inType
+    m.bill = bill
+    m.type = 0
+    m.create_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # 真正的保存
+    m.save()
+
+    # 更新账单表
+    Bill.objects.filter(id=bill).update(status=0,inmoney=0,updatetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     return JsonResponse(result)

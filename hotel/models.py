@@ -7,21 +7,55 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-class CheckIn(models.Model):
-    custumer_id = models.IntegerField(db_column='custumer _id', blank=True, null=True)  # Field renamed to remove unsuitable characters.
-    room_id = models.IntegerField(blank=True, null=True)
-    time_in = models.DateTimeField(blank=True, null=True)
-    day = models.IntegerField(blank=True, null=True)
-    time_out = models.DateTimeField(blank=True, null=True)
+
+
+class RoomType(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    typename = models.CharField(max_length=255, blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    vip_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     updatetime = models.DateTimeField(blank=True, null=True)
-    createtime = models.DateTimeField(blank=True, null=True)
+    custumer_type = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'check_in'
+        db_table = 'room_type'
+
+
+
+class Room(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    room_type_id = models.ForeignKey(RoomType, models.DO_NOTHING, db_column='room_type_id', to_field="id",blank=True,unique=True,null=True)
+    floorid = models.IntegerField(blank=True, null=True)
+    room = models.CharField(max_length=255, blank=True, null=True)
+    floorno = models.CharField(max_length=52,blank=True, null=True)
+    updatetime = models.DateTimeField(blank=True, null=True)
+    createtime = models.DateTimeField(blank=True, null=True)
+    # 状态0：空闲，-1：异常，1：入住，-2：未打扫
+    status = models.IntegerField(blank=True, null=True)
+    remark = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'room'
+
+class Bill(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    room = models.IntegerField(blank=True, null=True)
+    money = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    inmoney = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    updatetime = models.DateTimeField(blank=True, null=True)
+    createtime = models.DateTimeField(blank=True, null=True)
+    status = models.IntegerField(blank=True, null=True)
+    remark = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'bill'
 
 
 class Custumer(models.Model):
+    id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     sex = models.IntegerField(blank=True, null=True)
     idcard = models.CharField(max_length=255, blank=True, null=True)
@@ -35,6 +69,23 @@ class Custumer(models.Model):
     class Meta:
         managed = False
         db_table = 'custumer'
+
+
+class CheckIn(models.Model):
+    custumer_id = models.ForeignKey(Custumer, models.DO_NOTHING,db_column='custumer_id', to_field="id",blank=True,unique=True,null=True)
+    room_id = models.ForeignKey(Room, models.DO_NOTHING,db_column='room_id', to_field="id",blank=True,unique=True,null=True)
+    time_in = models.DateTimeField(blank=True, null=True)
+    day = models.IntegerField(blank=True, null=True)
+    time_out = models.DateTimeField(blank=True, null=True)
+    updatetime = models.DateTimeField(blank=True, null=True)
+    createtime = models.DateTimeField(blank=True, null=True)
+    bill = models.ForeignKey(Bill, models.DO_NOTHING, db_column='bill',to_field="id",blank=True,unique=True,null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'check_in'
+
+
 
 
 class Floor(models.Model):
@@ -57,38 +108,21 @@ class Income(models.Model):
     in_type = models.IntegerField(blank=True, null=True)
     remark = models.CharField(max_length=255, blank=True, null=True)
     type = models.IntegerField(blank=True, null=True)
+    bill = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'income'
 
 
-class Room(models.Model):
-    room_type_id = models.IntegerField(blank=True, null=True)
-    floorid = models.IntegerField(blank=True, null=True)
-    room = models.CharField(max_length=255, blank=True, null=True)
-    floorno = models.CharField(max_length=52,blank=True, null=True)
-    updatetime = models.DateTimeField(blank=True, null=True)
-    createtime = models.DateTimeField(blank=True, null=True)
-    status = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'room'
 
 
-class RoomType(models.Model):
-    typename = models.CharField(max_length=255, blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    vip_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    updatetime = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'room_type'
+
 
 
 class User(models.Model):
+    id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=255, blank=True, null=True)
     password = models.CharField(max_length=255, blank=True, null=True)
     updatetime = models.DateTimeField(blank=True, null=True)

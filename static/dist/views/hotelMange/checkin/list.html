@@ -30,25 +30,19 @@
     
     <div class="layui-card-body">
       <div style="padding-bottom: 10px;">
-        <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
-        <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+        <button class="layui-btn layuiadmin-btn-admin" data-type="add">登记入住</button>
       </div>
       
       <table id="LAY-checkin-back-manage" lay-filter="LAY-checkin-back-manage"></table>
       <script type="text/html" id="buttonTpl">
-        {{#  if(d.status == 0){ }}
-          <button class="layui-btn layui-btn-xs">正常</button>
+        {{#  if(d.bill__status == 0){ }}
+          <button class="layui-btn layui-btn-xs" lay-event="billinfo">正常</button>
         {{#  } else { }}
-          <button class="layui-btn layui-btn-danger layui-btn-xs">异常</button>
+          <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="billinfo">未结账</button>
         {{#  } }}
       </script>
       <script type="text/html" id="table-checkin-admin">
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-        {{#  if(d.role == '超级管理员'){ }}
-          <a class="layui-btn layui-btn-disabled layui-btn-xs"><i class="layui-icon layui-icon-delete"></i>删除</a>
-        {{#  } else { }}
-          <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
-        {{#  } }}
       </script>
 
         <script type="text/html" id="sexTpl">
@@ -120,7 +114,7 @@ layui.use('hotelmanage', layui.factory('hotelmanage')).use(['admin', 'hotelmanag
     }
     ,add: function(){
       admin.popup({
-        title: '添加入住信息'
+        title: '填写客户入住信息'
         ,area: ['850px', '600px']
         ,id: 'LAY-popup-checkin-add'
         ,success: function(layero, index){
@@ -151,8 +145,42 @@ layui.use('hotelmanage', layui.factory('hotelmanage')).use(['admin', 'hotelmanag
           });
         }
       });
+    },
+      billinfo: function(){
+      admin.popup({
+        title: '房间账单信息'
+        ,area: ['850px', '600px']
+        ,id: 'LAY-popup-checkin-billinfo'
+        ,success: function(layero, index){
+          view(this.id).render('hotelMange/income/billinfo').done(function(){
+            form.render(null, 'layuiadmin-form-billinfo');
+
+            //监听提交
+            form.on('submit(LAY-billinfo-back-submit)', function(data){
+              var field = data.field; //获取提交的字段
+                console.log(field);
+              //提交 Ajax 成功后，关闭当前弹层并重载表格
+              $.ajax({
+                  type:"POST",
+                  url:"/checkin_add/",
+                  data:field,
+                  dataType:"json",
+                  success:function (d) {
+                      if(d.code==-1) {
+                          layer.msg(d.msg);
+                      }else{
+                           layui.table.reload('LAY-checkin-back-manage'); //重载表格
+                            layer.close(index); //执行关闭
+                      }
+                  }
+              });
+
+            });
+          });
+        }
+      });
     }
-  }  
+  };
   $('.layui-btn.layuiadmin-btn-admin').on('click', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';

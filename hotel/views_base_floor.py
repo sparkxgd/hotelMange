@@ -2,7 +2,8 @@ from datetime import datetime
 from django.http import JsonResponse
 
 from hotel.models import Floor as Mo
-
+from hotel.models import Room
+from hotel.models import RoomType
 import json
 
 # 楼房管理
@@ -60,6 +61,25 @@ def add(request):
         m.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 真正的保存
         m.save()
+        # 楼房新建后，房间就自动生成
+        f = Mo.objects.filter(no=no)
+        u = RoomType.objects.all()
+        fno = int(f[0].floorno)
+        # 插到数据库里面
+        for i in range(0,fno):
+            for k in range(1, 9):
+                rm = Room()
+                # 楼房id+楼房单元+层+房间号
+                roomNo=str(f[0].id)+str(f[0].no)+str(i+1)+str("0")+str(k)
+                rm.room = roomNo
+                rm.floorid = f[0].id
+                rm.floorno = i+1
+                rm.status = 0
+                rm.room_type_id = u[0].id
+                rm.updatetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                rm.createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                # 真正的保存
+                rm.save()
     return JsonResponse(result)
 
 #   修改、编辑

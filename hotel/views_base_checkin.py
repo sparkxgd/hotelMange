@@ -2,6 +2,7 @@ import datetime
 from django.http import JsonResponse
 
 from hotel.models import CheckIn as Mo
+from hotel.models import Bill,Room,Custumer
 
 import json
 
@@ -16,12 +17,12 @@ def get_list(request):
     typename = request.GET.get("typename")
     if typename:
         #   到数据库去查找数据
-        values = Mo.objects.filter(typename__contains=typename)[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(typename__contains=typename)[(page-1)*limit:limit*page].values("id","time_in","day","time_out","updatetime","custumer_id__name","custumer_id__tel","bill__id","bill__money","bill__inmoney","bill__status","room_id__room")
         datas = list(values)
         total =len(datas)
     else:
         #   到数据库去查找数据
-        values = Mo.objects.all()[(page-1)*limit:limit*page].values()
+        values = Mo.objects.all()[(page-1)*limit:limit*page].values("id","time_in","day","time_out","custumer_id","updatetime","custumer_id__name","custumer_id__tel","bill__id","bill__money","bill__inmoney","bill__status","room_id__room")
         datas = list(values)
         total =len(datas)
     # 构造返回数据
@@ -50,10 +51,32 @@ def add(request):
         result["code"] = -1
         result["msg"] = "客户已经入住，不能添加！！"
     else:
+        room = Room.objects.filter(id=room_id).values("id",'status','room_type_id','room_type_id__vip_price','room_type_id__price','room_type_id__typename')
+        custumer = Custumer.objects.filter(id=custumer_id)
+
+
+        # 生成账单
+        b = Bill()
+        if custumer[0].type == 1:
+            all_money = room[0]["room_type_id__vip_price"]*day
+        else:
+            all_money = room[0]["room_type_id__price"]*day
+        b.money = all_money
+        b.inmoney = all_money
+        b.room = room_id
+        b.status = 1
+        b.createtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        b.updatetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        b.save()
+        # yb = Bill.objects.filter(room=b.room,status=b.status,money=b.money)
+
         # 插到数据库里面
+        nroom = Room()
+        nroom.id=room[0]["id"]
         m = Mo()
-        m.custumer_id = custumer_id
-        m.room_id = room_id
+        m.bill = b
+        m.custumer_id = custumer[0]
+        m.room_id = nroom
         m.time_in = time_in
         m.day = day
         delta = datetime.timedelta(days=day)
@@ -63,6 +86,9 @@ def add(request):
         m.updatetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # 真正的保存
         m.save()
+        updatetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 更新房间状态
+        Room.objects.filter(id=nroom.id).update(status=1, updatetime=updatetime)
     return JsonResponse(result)
 
 #   修改、编辑
