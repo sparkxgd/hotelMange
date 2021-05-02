@@ -28,6 +28,7 @@ from hotel import views_base_income
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index),
+    path('login/', views_user.login),
     path('users/', views_user.get_list),
     path('user_add/', views_user.add),
     path('user_edit/', views_user.edit),
@@ -70,6 +71,8 @@ urlpatterns = [
     path('checkin_del/', views_base_checkin.delete),
     path('checkin_batchdel/', views_base_checkin.batchdel),
     path('checkouts/', views_base_checkin.get_out_list),
+    path('checkout/', views_base_checkin.checkout),
+
     path('incomes/', views_base_income.get_list),
     path('income_add/', views_base_income.add),
     path('income_edit/', views_base_income.edit),

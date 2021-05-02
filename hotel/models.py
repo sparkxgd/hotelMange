@@ -22,10 +22,24 @@ class RoomType(models.Model):
         db_table = 'room_type'
 
 
+class Floor(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    no = models.CharField(max_length=50,blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    floorno = models.CharField(max_length=50,blank=True, null=True)
+    updatetime = models.DateTimeField(blank=True, null=True)
+    createtime = models.DateTimeField(blank=True, null=True)
+    status = models.IntegerField(blank=True, null=True)
+    remark = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'floor'
+
 
 class Room(models.Model):
     id = models.BigAutoField(primary_key=True)
-    room_type_id = models.ForeignKey(RoomType, models.DO_NOTHING, db_column='room_type_id', to_field="id",blank=True,unique=True,null=True)
+    room_type_id = models.ForeignKey(RoomType, models.DO_NOTHING, db_column='room_type_id', to_field="id",blank=True,null=True)
     floorid = models.IntegerField(blank=True, null=True)
     room = models.CharField(max_length=255, blank=True, null=True)
     floorno = models.CharField(max_length=52,blank=True, null=True)
@@ -38,6 +52,7 @@ class Room(models.Model):
     class Meta:
         managed = False
         db_table = 'room'
+
 
 class Bill(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -72,14 +87,14 @@ class Custumer(models.Model):
 
 
 class CheckIn(models.Model):
-    custumer_id = models.ForeignKey(Custumer, models.DO_NOTHING,db_column='custumer_id', to_field="id",blank=True,unique=True,null=True)
-    room_id = models.ForeignKey(Room, models.DO_NOTHING,db_column='room_id', to_field="id",blank=True,unique=True,null=True)
+    custumer_id = models.ForeignKey(Custumer, models.DO_NOTHING,db_column='custumer_id', to_field="id",blank=True,null=True)
+    room_id = models.ForeignKey(Room, models.DO_NOTHING,db_column='room_id', to_field="id",blank=True,null=True)
     time_in = models.DateTimeField(blank=True, null=True)
     day = models.IntegerField(blank=True, null=True)
     time_out = models.DateTimeField(blank=True, null=True)
     updatetime = models.DateTimeField(blank=True, null=True)
     createtime = models.DateTimeField(blank=True, null=True)
-    bill = models.ForeignKey(Bill, models.DO_NOTHING, db_column='bill',to_field="id",blank=True,unique=True,null=True)
+    bill = models.ForeignKey(Bill, models.DO_NOTHING, db_column='bill',to_field="id",blank=True,null=True)
 
     class Meta:
         managed = False

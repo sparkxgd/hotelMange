@@ -126,7 +126,7 @@
             field: "room",
             title: "房间编号"
         }, {
-            field: "room_type_id",
+            field: "room_type_id__typename",
             title: "房间类型"
         }, {
             field: "floorid",

@@ -191,32 +191,32 @@
         l.render({//客户退房管理的表格
             elem: "#LAY-checkout-back-manage",
             url: "/checkouts/",
-            cols: [[{type: "checkbox", fixed: "left"}, {field: "id", width: 80, title: "ID", sort: !0}, {
-                field: "custumer_id",
-                title: "客户"
-            }, {
-                field: "room_id",
+            cols: [[{type: "checkbox", fixed: "left"},  {
+                field: "room",
                 title: "房间"
             }, {
-                field: "time_in",
-                title: "入住时间"
+                field: "room_type_id__typename",
+                title: "类型"
             }, {
-                field: "day",
-                title: "入住天数"
+                field: "room_type_id__price",
+                title: "普通价"
             }, {
-                field: "time_out",
-                title: "退房时间"
+                field: "room_type_id__vip_price",
+                title: "会员价"
+            },{
+                field: "status",
+                title: "状态",
+                toolbar: "#statusTpl"
             }
-                , {field: "updatetime", title: "更新时间", sort: !0}
                 , {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-checkout-admin"}]],
             text: "对不起，加载出现异常！"
         }), l.on("tool(LAY-checkout-back-manage)", function (e) {
         var l = e.data;
-        "del" === e.event ? layer.confirm("确定删除？", function (i) {
+        "outroom" === e.event ? layer.confirm("确定退房？", function (i) {
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             layui.admin.req({
                 type: "POST",
-                url: "/checkout_del/",
+                url: "/checkout/",
                 data: {"id": l.id},
                 dataType: "json",
                 success: function (r) {
@@ -281,7 +281,7 @@
             //提交 Ajax 成功后，关闭当前弹层并重载表格
             layui.admin.req({
                 type: "POST",
-                url: "/checkout_del/",
+                url: "/checkout/",
                 data: {"id": l.id},
                 dataType: "json",
                 success: function (r) {

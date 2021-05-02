@@ -54,7 +54,6 @@ def add(request):
         room = Room.objects.filter(id=room_id).values("id",'status','room_type_id','room_type_id__vip_price','room_type_id__price','room_type_id__typename')
         custumer = Custumer.objects.filter(id=custumer_id)
 
-
         # 生成账单
         b = Bill()
         if custumer[0].type == 1:
@@ -62,7 +61,7 @@ def add(request):
         else:
             all_money = room[0]["room_type_id__price"]*day
         b.money = all_money
-        b.inmoney = all_money
+        b.inmoney = 0
         b.room = room_id
         b.status = 1
         b.createtime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -148,21 +147,36 @@ def get_out_list(request):
     #   获取页面提交的数据
     page = int(request.GET.get("page"))
     limit = int(request.GET.get("limit"))
-    typename = request.GET.get("typename")
-    if typename:
+    no = request.GET.get("no")
+    if no:
         #   到数据库去查找数据
-        values = Mo.objects.filter(typename__contains=typename)[(page-1)*limit:limit*page].values()
+        values = Room.objects.filter(no__contains=no, status=1)[(page - 1) * limit:limit * page].values('id','room','floorno','status','room_type_id','room_type_id__typename','room_type_id__vip_price','room_type_id__price')
         datas = list(values)
-        total =len(datas)
+        total = len(datas)
     else:
         #   到数据库去查找数据
-        values = Mo.objects.all()[(page-1)*limit:limit*page].values()
+        values = Room.objects.filter(status=1)[(page - 1) * limit:limit * page].values('id','room','floorno','status','room_type_id','room_type_id__typename','room_type_id__vip_price','room_type_id__price')
         datas = list(values)
-        total =len(datas)
+        total = len(datas)
     # 构造返回数据
     if total == 0:
         result = {"code": -1, "msg": "暂无数据！！！", "count": total, "data": datas}
     else:
         result = {"code": 0, "msg": "查询成功！！", "count": total, "data": datas}
 
+    return JsonResponse(result)
+
+# 退房
+def checkout(request):
+    result = {"code": 0, "msg": "退房成功！"}
+    #   获取前端的数据
+    roomid = request.POST.get("id")
+    updatetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #   判断是否已经结账(values)
+    b = Bill.objects.filter(room=roomid)
+    if b[0].status == 0:
+        #   更新房间状态为未打扫
+        Room.objects.filter(id=roomid).update(status=-2, updatetime=updatetime)
+    else:
+        result = {"code": 0, "msg": "该房间未结账，请结账！！！退房失败！"}
     return JsonResponse(result)

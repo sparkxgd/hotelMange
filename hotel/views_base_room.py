@@ -19,12 +19,12 @@ def get_list(request):
     status = request.GET.get("status",0)
     if no:
         #   到数据库去查找数据
-        values = Mo.objects.filter(no__contains=no,status=status)[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(no__contains=no,status=status)[(page-1)*limit:limit*page].values("id",'status',"floorno","floorid","room",'room_type_id','room_type_id__vip_price','room_type_id__price','room_type_id__typename')
         datas = list(values)
         total =len(datas)
     else:
         #   到数据库去查找数据
-        values = Mo.objects.filter(status=status)[(page-1)*limit:limit*page].values()
+        values = Mo.objects.filter(status=status)[(page-1)*limit:limit*page].values("id",'status',"floorno","room","floorid",'room_type_id','room_type_id__vip_price','room_type_id__price','room_type_id__typename')
         datas = list(values)
         total =len(datas)
     # 构造返回数据

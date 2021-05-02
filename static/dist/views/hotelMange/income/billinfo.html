@@ -22,7 +22,7 @@
                 <div class="layui-col-md6">
                     <div class="layui-panel">
                         <div style="padding: 50px 30px;">
-                            {{# if(d.bill__status == 0){ }}
+                            {{# if( (d.params.bill__money-d.params.bill__inmoney) > 0){ }}
                             <div class="layui-form-item">
                                 <label class="layui-form-label">付款金额</label>
                                 <div class="layui-input-inline">

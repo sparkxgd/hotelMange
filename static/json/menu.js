@@ -45,57 +45,36 @@
     "title": "后台管理"
     ,"icon": "layui-icon-home"
     ,"list": [{
-      "name": "basemanage"
-      ,"title": "基本信息"
-      ,"list":[{
-        "name": "roomtype"
-        ,"title": "房间类型管理"
-        ,"jump": "baseMange/roomtype/list"
-        },{
-        "name": "room"
-        ,"title": "房间管理"
-        ,"jump": "baseMange/room/list"
-        }]
-    }, {
       "name": "userlist"
       ,"title": "用户管理"
         ,"jump": "user/administrators/list"
     }, {
-      "name": "homepage2"
-      ,"title": "权限管理"
-      ,"jump": "home/homepage2"
-    }, {
+        "name": "roomtype"
+        ,"title": "房间类型管理"
+        ,"jump": "baseMange/roomtype/list"
+        },{
       "name": "floor"
       ,"title": "楼房管理"
       ,"jump": "baseMange/floor/list"
+    },{
+        "name": "room"
+        ,"title": "房间管理"
+        ,"jump": "baseMange/room/list"
     }]
   },
    {
-    "name": "set"
-    ,"title": "设置"
-    ,"icon": "layui-icon-set"
-    ,"list": [{
-      "name": "system"
-      ,"title": "系统设置"
-      ,"spread": true
-      ,"list": [{
-        "name": "website"
-        ,"title": "网站设置"
-      },{
-        "name": "email"
-        ,"title": "邮件服务"
-      }]
-    },{
+     "icon": "layui-icon-set",
       "name": "user"
       ,"title": "个人中心"
       ,"spread": true
       ,"list": [{
         "name": "info"
         ,"title": "基本资料"
+       ,"jump": "set/user/info"
       },{
         "name": "password"
         ,"title": "修改密码"
+       ,"jump": "set/user/password"
       }]
-    }]
   }]
 }
