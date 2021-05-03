@@ -40,7 +40,8 @@ class Floor(models.Model):
 class Room(models.Model):
     id = models.BigAutoField(primary_key=True)
     room_type_id = models.ForeignKey(RoomType, models.DO_NOTHING, db_column='room_type_id', to_field="id",blank=True,null=True)
-    floorid = models.IntegerField(blank=True, null=True)
+    floorid = models.ForeignKey(Floor, models.DO_NOTHING, db_column='floorid', to_field="id", blank=True,
+                                     null=True)
     room = models.CharField(max_length=255, blank=True, null=True)
     floorno = models.CharField(max_length=52,blank=True, null=True)
     updatetime = models.DateTimeField(blank=True, null=True)

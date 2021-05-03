@@ -129,7 +129,7 @@
             field: "room_type_id__typename",
             title: "房间类型"
         }, {
-            field: "floorid",
+            field: "floorid__name",
             title: "所属楼房"
         }, {
             field: "floorno",
@@ -140,7 +140,7 @@
                 templet: "#buttonTpl",
                 minWidth: 80,
                 align: "center"
-            },
+            }
             , {field: "updatetime", title: "更新时间", sort: !0}
             ,  {title: "操作", width: 150, align: "center", fixed: "right", toolbar: "#table-room-admin"}]],
         text: "对不起，加载出现异常！"
