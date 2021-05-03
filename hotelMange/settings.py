@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'hotel.middleware.loginMiddleware.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'hotelMange.urls'
@@ -55,8 +56,8 @@ ROOT_URLCONF = 'hotelMange.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        # 'DIRS': [os.path.join(BASE_DIR,'static/dist/views')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

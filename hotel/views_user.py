@@ -93,15 +93,3 @@ def batchdel(request):
     Mo.objects.filter(id__in=ids_list).delete()
     return JsonResponse(result)
 
-
-
-#   登录
-def login(request):
-    username = request.GET.get("username")
-    password = request.GET.get("password")
-    u = Mo.objects.filter(username=username,password=password)[0]
-    if u:
-        result = {"code": 0, "msg": "登录成功！","data":username}
-    else:
-        result = {"code": -1, "msg": "密码错误！"}
-    return JsonResponse(result)

@@ -102,21 +102,6 @@ class CheckIn(models.Model):
 
 
 
-
-class Floor(models.Model):
-    no = models.CharField(max_length=50,blank=True, null=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    floorno = models.CharField(max_length=50,blank=True, null=True)
-    updatetime = models.DateTimeField(blank=True, null=True)
-    createtime = models.DateTimeField(blank=True, null=True)
-    status = models.IntegerField(blank=True, null=True)
-    remark = models.CharField(max_length=255, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'floor'
-
-
 class Income(models.Model):
     money = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     create_time = models.DateTimeField(blank=True, null=True)
@@ -132,10 +117,6 @@ class Income(models.Model):
 
 
 
-
-
-
-
 class User(models.Model):
     id = models.BigAutoField(primary_key=True)
     username = models.CharField(max_length=255, blank=True, null=True)
@@ -143,6 +124,7 @@ class User(models.Model):
     updatetime = models.DateTimeField(blank=True, null=True)
     createtime = models.DateTimeField(blank=True, null=True)
     status = models.IntegerField(blank=True, null=True)
+    nickname = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False

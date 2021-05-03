@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生管理系统</title>
+    <link rel="stylesheet" href="../static/layui/css/layui.css?t=20181101-1" media="all">
+    <style>
+        body{
+            background-color: red; /* 浏览器不支持的时候显示 */
+            height: 100%;
+            background-image: linear-gradient(to right,green, blue); /* 标准的语法（必须放在最后） */
+        }
+        .login{
+            width:500px;
+            height:300px;
+            margin-left: 35%;
+            margin-top: 60px;
+            border: 3px solid white;
+            border-radius: 8px;
+            background-image: linear-gradient(141deg,#9fb8ad 0%,#1fc8db 51%,#2cb5e8 75%);
+            box-shadow:0px 0px 10px 10px #999;
+        }
+        .title{
+            margin-left: 40%;
+            margin-top: 50px;
+            font-size: 40px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="title">乐乐酒店管理系统</div>
+<div class="login">
+    <div class="layui-tab layui-tab-brief" lay-filter="test">
+      <ul class="layui-tab-title">
+        <li class="layui-this">密码登录</li>
+      </ul>
+      <div class="layui-tab-content" style="height: 100px;">
+        <div class="layui-tab-item layui-show layui-form">
+            <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-inline">
+                      <input type="text" name="username" lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">请填写账号</div>
+              </div>
+              <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                      <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">请填写6到12位密码</div>
+              </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-inline">
+                      <button type="button" class="layui-btn layui-btn-fluid"  lay-submit lay-filter="login">登录</button>
+                </div>
+            </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+</body>
+<script src="../static/layui/layui.js?t=20181101-1"></script>
+<script>
+layui.use(['layer','form'], function(){
+  var $ = layui.jquery, layer = layui.layer,form = layui.form;
+        //密码登录
+        form.on('submit(login)', function (obj) {
+            $.ajax({
+                url: '/login/' //实际使用请改成服务端真实接口
+                , data: obj.field
+                , method: 'POST'
+                , success: function (r) {
+                    layer.msg(r.result.msg);
+                    window.location.href = "/index/";
+                }
+                , done: function (res) {
+                }
+            });
+        });
+
+
+  });
+</script>
+</html>
