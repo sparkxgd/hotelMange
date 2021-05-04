@@ -37,81 +37,31 @@
         };
         i[0] && n(0)
     }), layui.use(["carousel", "echarts"], function () {
-        var e = layui.$, a = (layui.carousel, layui.echarts), l = [],  i = e("#LAY-checkinchart-pageone").children("div"), n = function (e) {
-            l[e] = a.init(i[e], layui.echartsTheme);
-                    layui.admin.req({
-                              type:"POST",
-                              url:"/getCheckinNumForEchartMonth/",
-                              data:{},
-                              dataType:"json",
-                              success:function (r) {
-                                  var op = {
-                                      grid: {
-                                        left: '1%',
-                                        right: '1%',
-                                        bottom: '1%',
-                                        containLabel: false
-                                    },
-                                    tooltip: {trigger: "axis"},
-                                    calculable: !0,
-                                    legend: {data: ["入住量"]},
-                                    xAxis: [{
-                                        type: "category",
-                                        axisLabel: { interval: 0, rotate: -50 },
-                                        data: r.data.dayName
-                                    }],
-                                    yAxis: [{type: "value", name: "入住量(人)", axisLabel: {formatter: "{value}"}
-                                    }],
-                                    series: [{
-                                        name: "入住量",
-                                        type: "line",
-                                        data: r.data.dayNum
-                                    }]
-                              };
-                              var t = [op];
-                                  l[e].setOption(t[e]);
-                                  window.onresize = l[e].resize;
-                              }
-                          });
-        };
-        i[0] && n(0)
-    }), layui.use(["carousel", "echarts"], function () {
-        var e = layui.$, a = (layui.carousel, layui.echarts), l = [],  i = e("#LAY-checkinchart-pagetwo").children("div"), n = function (e) {
-            l[e] = a.init(i[e], layui.echartsTheme);
-                    layui.admin.req({
-                              type:"POST",
-                              url:"/getCheckinNumForEchartYear/",
-                              data:{},
-                              dataType:"json",
-                              success:function (r) {
-                                  var op = {
-                                       grid: {
-                                        left: '1%',
-                                        right: '1%',
-                                        bottom: '1%',
-                                        containLabel: false
-                                    },
-                                    tooltip: {trigger: "axis"},
-                                    calculable: !0,
-                                    legend: {data: ["入住量"]},
-                                    xAxis: [{
-                                        type: "category",
-                                        axisLabel: { interval: 0, rotate: -50 },
-                                        data: r.data.dayName
-                                    }],
-                                    yAxis: [{type: "value", name: "入住量(人)", axisLabel: {formatter: "{value}"}
-                                    }],
-                                    series: [{
-                                        name: "入住量",
-                                        type: "line",
-                                        data: r.data.dayNum
-                                    }]
-                              };
-                              var t = [op];
-                                  l[e].setOption(t[e]);
-                                  window.onresize = l[e].resize;
-                              }
-                          });
+        var e = layui.$, a = (layui.carousel, layui.echarts), l = [], t = [{
+            tooltip: {trigger: "axis"},
+            calculable: !0,
+            legend: {data: ["访问量", "下载量", "平均访问量"]},
+            xAxis: [{
+                type: "category",
+                data: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"]
+            }],
+            yAxis: [{type: "value", name: "访问量", axisLabel: {formatter: "{value} 万"}}, {
+                type: "value",
+                name: "下载量",
+                axisLabel: {formatter: "{value} 万"}
+            }],
+            series: [{
+                name: "访问量",
+                type: "line",
+                data: [900, 850, 950, 1e3, 1100, 1050, 1e3, 1150, 1250, 1370, 1250, 1100]
+            }, {
+                name: "下载量",
+                type: "line",
+                yAxisIndex: 1,
+                data: [850, 850, 800, 950, 1e3, 950, 950, 1150, 1100, 1240, 1e3, 950]
+            }, {name: "平均访问量", type: "line", data: [870, 850, 850, 950, 1050, 1e3, 980, 1150, 1e3, 1300, 1150, 1e3]}]
+        }], i = e("#LAY-index-pagetwo").children("div"), n = function (e) {
+            l[e] = a.init(i[e], layui.echartsTheme), l[e].setOption(t[e]), window.onresize = l[e].resize
         };
         i[0] && n(0)
     }), layui.use(["carousel", "echarts"], function () {
@@ -148,7 +98,7 @@
                     value: 62310
                 }, {name: "山东", value: 39231}, {name: "江苏", value: 35911}, {name: "广东", value: 55891}]
             }]
-        }], i = e("#LAY-index-pagetwo").children("div"), n = function (e) {
+        }], i = e("#LAY-index-pagethree").children("div"), n = function (e) {
             l[e] = a.init(i[e], layui.echartsTheme), l[e].setOption(t[e]), window.onresize = l[e].resize
         };
         i[0] && n(0)

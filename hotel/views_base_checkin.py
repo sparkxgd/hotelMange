@@ -1,6 +1,6 @@
 import datetime
 from django.http import JsonResponse
-
+import calendar
 from hotel.models import CheckIn as Mo
 from hotel.models import Bill,Room,Custumer
 
@@ -179,4 +179,71 @@ def checkout(request):
         Room.objects.filter(id=roomid).update(status=-2, updatetime=updatetime)
     else:
         result = {"code": 0, "msg": "该房间未结账，请结账！！！退房失败！"}
+    return JsonResponse(result)
+
+
+# 入住统计(今日,昨日，本月，今年入住的人数)
+def getChecinNum(request):
+    day = datetime.datetime.now().strftime("%Y-%m-%d")
+    month = datetime.datetime.now().strftime("%Y-%m")
+    year = datetime.datetime.now().strftime("%Y")
+    delta = datetime.timedelta(days=1)
+    time_in = datetime.datetime.strptime(day, '%Y-%m-%d')
+    ysday = time_in - delta
+    yesday = ysday.strftime("%Y-%m-%d")
+    #   今日
+    dayNum = Mo.objects.filter(time_in__contains=day).count()
+    yesdayNum = Mo.objects.filter(time_in__contains=yesday).count()
+    monthNum = Mo.objects.filter(time_in__contains=month).count()
+    yearNum = Mo.objects.filter(time_in__contains=year).count()
+    result = {"code": 0, "msg": "查询成功！", "data": {"dayNum": dayNum, "yesdayNum": yesdayNum, "monthNum": monthNum, "yearNum": yearNum}}
+    return JsonResponse(result)
+
+
+# 入住统计图形(本月入住的人数)
+def getCheckinNumForEchartMonth(request):
+    d = datetime.datetime.now()
+    month = d.strftime("%Y-%m")
+    checkin_list = Mo.objects.filter(time_in__contains=month).values()
+    year = d.year
+    month = d.month
+
+    # 本月有多少天
+    totalDay = calendar.monthrange(year, month)[1]
+    dayName = []
+    dayNum = []
+    for n in range(1,totalDay):
+        # 获取本月的第n天
+        this_month_day = datetime.datetime(d.year, d.month, n)
+        day = this_month_day.strftime("%m-%d")
+        dayName.append(day)
+        num = 0
+        for m in checkin_list:
+            if(day in str(m["time_in"])):
+                num += 1
+
+        dayNum.append(num)
+    result = {"code": 0, "msg": "查询成功！", "data": {"dayName": dayName, "dayNum": dayNum}}
+    return JsonResponse(result)
+
+
+# 入住统计图形(今年入住的人数)
+def getCheckinNumForEchartYear(request):
+    d = datetime.datetime.now()
+    year = d.strftime("%Y")
+    checkin_list = Mo.objects.filter(time_in__contains=year).values()
+    dayName = []
+    dayNum = []
+    for n in range(1, 13):
+        # 获取本月的第n天
+        this_year_start = datetime.datetime(d.year, n, 1)
+        day = this_year_start.strftime("%Y-%m")
+        dayName.append(day)
+        num = 0
+        for m in checkin_list:
+            if (day in str(m["time_in"])):
+                num += 1
+
+        dayNum.append(num)
+    result = {"code": 0, "msg": "查询成功！", "data": {"dayName": dayName, "dayNum": dayNum}}
     return JsonResponse(result)
