@@ -19,7 +19,7 @@
             box-shadow:4px 4px 5px 3px #999;
         }
         .title{
-            margin-left: 40%;
+            margin-left: 35%;
             margin-top: 50px;
             font-size: 40px;
             color: white;
@@ -46,7 +46,7 @@
     </style>
 </head>
 <body>
-<div class="title">学生管理系统</div>
+<div class="title">乐乐酒店管理系统</div>
 <div class="login">
     <div class="layui-tab layui-tab-brief" lay-filter="test">
       <ul class="layui-tab-title">
@@ -100,60 +100,6 @@ layui.use(['element','layer','form'], function(){
   element.on('tab(test)', function(elem){
     if(elem.index ==1){//切换到人脸登录的时候，打开摄像头
         camera.openPlay();
-        //使用定时器定期检测人脸信息
-        timer=setInterval(function () {
-            //获取相机的图片
-            let img = camera.takePhoto();
-            //把图片上传到我们的后台
-            $.ajax({
-                url:"/upload/face_detect_base_login/",
-                type:"post",
-                dataType:"json",
-                data:{"img":img},
-                async: false,
-                success:function (d) {
-                    let r = d.result.face;
-                    //显示人脸信息
-                    if(r!=null){
-                        let loc = r.face_list[0].location;
-                        let height = loc.height+40;
-                        let width = loc.width+30;
-                        let left = loc.left+85;
-                        let top = loc.top+5;
-                        let rotation = loc.rotation;
-
-                        //动态改变人脸框的样式
-                        $(".draw_round").css("height",height);
-                        $(".draw_round").css("width",width);
-                        $(".draw_round").css("left",left);
-                        $(".draw_round").css("top",top);
-                        $(".draw_round").css("border","1px solid red");
-                        $(".draw_round").css("transform","rotate("+rotation+"deg)");
-
-                        //开始登陆
-                        $.ajax({
-                            url: "/login_face/",
-                            type: "post",
-                            dataType: "json",
-                            data: {"img": img},
-                            async: false,
-                            success: function (dd) {
-                                layer.msg(dd.result.msg);
-                                if (dd.result.code==0) {
-                                    clearInterval(timer);
-                                    window.location.href = '/index/'
-                                }
-                            }
-                        });
-
-                    }else{
-                        layer.msg(d.result.msg);
-                    }
-
-                }
-            });
-        },2000);
-
     }else{//其他都关闭摄像头
          camera.closePlay();
          clearInterval(timer);
