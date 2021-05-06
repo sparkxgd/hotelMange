@@ -3,8 +3,8 @@
     var i = (layui.$, layui.layer, layui.laytpl, layui.setter, layui.view, layui.admin);
     i.events.logout = function () {
         i.req({
-            url: "../static/json/user/logout.js", type: "get", data: {}, done: function (e) {
-                i.exit()
+            url: "/logout/", type: "get", data: {}, success: function (r) {
+                 window.location.href = "/index/";
             }
         })
     }, e("common", {})
