@@ -2,23 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>学生管理系统</title>
+    <title>乐乐酒店管理系统</title>
     <link rel="stylesheet" href="../static/layui/css/layui.css?t=20181101-1" media="all">
     <style>
         body{
-            background-color: red; /* 浏览器不支持的时候显示 */
-            height: 100%;
-            background-image: linear-gradient(to right,green, blue); /* 标准的语法（必须放在最后） */
+            background-color:lightseagreen;
         }
         .login{
             width:500px;
             height:300px;
-            margin-left: 35%;
-            margin-top: 60px;
+            margin-left: 30%;
+            margin-top: 30px;
             border: 3px solid white;
             border-radius: 8px;
             background-image: linear-gradient(141deg,#9fb8ad 0%,#1fc8db 51%,#2cb5e8 75%);
-            box-shadow:0px 0px 10px 10px #999;
+            box-shadow:4px 4px 5px 3px #999;
         }
         .title{
             margin-left: 40%;
@@ -26,14 +24,34 @@
             font-size: 40px;
             color: white;
         }
+        #face {
+            margin-left: 10%;
+            width: 80%;
+            border-radius: 10px;
+            border: 4px solid black;
+        }
+        .wai_round{
+            position: relative;
+            z-index: 0;
+        }
+        .draw_round{
+            width: 80px;
+            height: 80px;
+            top: 5px;
+            left: 55px;
+
+            position: absolute;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
-<div class="title">乐乐酒店管理系统</div>
+<div class="title">学生管理系统</div>
 <div class="login">
     <div class="layui-tab layui-tab-brief" lay-filter="test">
       <ul class="layui-tab-title">
         <li class="layui-this">密码登录</li>
+        <li>人脸登录</li>
       </ul>
       <div class="layui-tab-content" style="height: 100px;">
         <div class="layui-tab-item layui-show layui-form">
@@ -59,15 +77,89 @@
             </div>
 
         </div>
+        <div class="layui-tab-item wai_round">
+            <div class="draw_round"></div>
+            <video id="face" autoplay="autoplay"></video>
+        </div>
       </div>
     </div>
 </div>
 
 </body>
 <script src="../static/layui/layui.js?t=20181101-1"></script>
+<script src="../static/camera.js"></script>
 <script>
-layui.use(['layer','form'], function(){
-  var $ = layui.jquery, layer = layui.layer,form = layui.form;
+layui.use(['element','layer','form'], function(){
+  var $ = layui.jquery, layer = layui.layer,form = layui.form
+  ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+    //新建相机对象
+    var camera = new Camera("#face");
+    //定时器
+    var timer;
+//监听选项卡的切换
+  element.on('tab(test)', function(elem){
+    if(elem.index ==1){//切换到人脸登录的时候，打开摄像头
+        camera.openPlay();
+        //使用定时器定期检测人脸信息
+        timer=setInterval(function () {
+            //获取相机的图片
+            let img = camera.takePhoto();
+            //把图片上传到我们的后台
+            $.ajax({
+                url:"/upload/face_detect_base_login/",
+                type:"post",
+                dataType:"json",
+                data:{"img":img},
+                async: false,
+                success:function (d) {
+                    let r = d.result.face;
+                    //显示人脸信息
+                    if(r!=null){
+                        let loc = r.face_list[0].location;
+                        let height = loc.height+40;
+                        let width = loc.width+30;
+                        let left = loc.left+85;
+                        let top = loc.top+5;
+                        let rotation = loc.rotation;
+
+                        //动态改变人脸框的样式
+                        $(".draw_round").css("height",height);
+                        $(".draw_round").css("width",width);
+                        $(".draw_round").css("left",left);
+                        $(".draw_round").css("top",top);
+                        $(".draw_round").css("border","1px solid red");
+                        $(".draw_round").css("transform","rotate("+rotation+"deg)");
+
+                        //开始登陆
+                        $.ajax({
+                            url: "/login_face/",
+                            type: "post",
+                            dataType: "json",
+                            data: {"img": img},
+                            async: false,
+                            success: function (dd) {
+                                layer.msg(dd.result.msg);
+                                if (dd.result.code==0) {
+                                    clearInterval(timer);
+                                    window.location.href = '/index/'
+                                }
+                            }
+                        });
+
+                    }else{
+                        layer.msg(d.result.msg);
+                    }
+
+                }
+            });
+        },2000);
+
+    }else{//其他都关闭摄像头
+         camera.closePlay();
+         clearInterval(timer);
+    }
+  });
+
         //密码登录
         form.on('submit(login)', function (obj) {
             $.ajax({
