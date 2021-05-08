@@ -26,6 +26,7 @@ from hotel import views_base_income
 from hotel import views_index
 
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', views.index),
