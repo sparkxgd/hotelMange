@@ -23,6 +23,7 @@ from hotel import views_base_room
 from hotel import views_base_custumer
 from hotel import views_base_checkin
 from hotel import views_base_income
+from hotel import views_index
 
 
 urlpatterns = [
@@ -32,6 +33,8 @@ urlpatterns = [
     path('logout/', views.logout),
     path('openlogin/', views.openlogin),
     path('get_session/', views.get_session),
+    path('getTotalForEchartYear/', views_index.getTotalForEchartYear),
+    path('getTotalNum/', views_index.getTotalNum),
     path('users/', views_user.get_list),
     path('user_add/', views_user.add),
     path('user_edit/', views_user.edit),
@@ -78,6 +81,7 @@ urlpatterns = [
     path('checkin_batchdel/', views_base_checkin.batchdel),
     path('checkouts/', views_base_checkin.get_out_list),
     path('checkout/', views_base_checkin.checkout),
+    path('checkout_num_by_day/', views_base_checkin.checkout_num_by_day),
 
     path('incomes/', views_base_income.get_list),
     path('income_add/', views_base_income.add),
@@ -85,4 +89,6 @@ urlpatterns = [
     path('income_del/', views_base_income.delete),
     path('income_batchdel/', views_base_income.batchdel),
     path('bill_income/', views_base_income.bill_income),
+    path('getIncomeNum/', views_base_income.getIncomeNum),
+    path('getIncomeNumForEchartYear/', views_base_income.getIncomeNumForEchartYear),
 ]

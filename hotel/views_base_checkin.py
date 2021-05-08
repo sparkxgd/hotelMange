@@ -182,6 +182,16 @@ def checkout(request):
     return JsonResponse(result)
 
 
+# 获取预计今日退房的
+def checkout_num_by_day(request):
+    day = datetime.datetime.now().strftime("%Y-%m-%d")
+    #   今日
+    num = Mo.objects.filter(time_out__contains=day).values('room_id').distinct().order_by('room_id').count()
+    result = {"code": 0, "msg": "查询成功！",
+              "data": {"num": num}}
+    return JsonResponse(result)
+
+
 # 入住统计(今日,昨日，本月，今年入住的人数)
 def getChecinNum(request):
     day = datetime.datetime.now().strftime("%Y-%m-%d")

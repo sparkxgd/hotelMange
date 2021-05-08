@@ -81,13 +81,14 @@
         <span>入住:<label id="income"></label>间</span>
         <span>预留:<label id="yuliu"></label>间</span>
         <span>需维修:<label id="weixiu"></label>间</span>
-        <span>预计今日离开:<label id="out"></label>间</span>
+        <script type="text/html" template lay-url="/checkout_num_by_day/">
+        <span>预计今日离开:<label id="out">{{ d.data.num }}</label>间</span>
+        </script>
     </div>
     <!-- 操作按钮-->
     <div class="layui-col-md5 toolsbs layui-form" lay-filter="layadmin-userfront-formlist">
         <button type="button" class="layui-btn layui-btn-sm layui-bg-red" data-type="income">入住</button>
         <button type="button" class="layui-btn layui-btn-sm" data-type="outroom">退房</button>
-        <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" data-type="changeRoom">调换</button>
         <button type="button" class="layui-btn layui-btn-sm layui-btn-warm" data-type="baoliu">预留</button>
         <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" data-type="quexiaobaoliu">取消预留</button>
         <button type="button" class="layui-btn layui-btn-sm" data-type="baoxiu">报修</button>
@@ -247,13 +248,11 @@
                         $('#yuliu').empty();
                         $('#income').empty();
                         $('#weixiu').empty();
-                        $('#out').empty();
 
                         $('#kong').append(kong);
                         $('#yuliu').append(yuliu);
                         $('#income').append(income);
                         $('#weixiu').append(weixiu);
-                        $('#out').append(income);
 
 
                         form.render();

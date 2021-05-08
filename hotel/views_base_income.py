@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from hotel.models import Income as Mo
 from hotel.models import Bill
 import json
+from django.db.models import Sum  # 引入
 
 # 收支管理
 
@@ -166,4 +167,50 @@ def bill_income(request):
     # 更新账单表
     Bill.objects.filter(id=bill).update(status=0,inmoney=0,updatetime=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
+    return JsonResponse(result)
+
+
+# 收入统计(今日,昨日，本月，今年收入)
+def getIncomeNum(request):
+    day = datetime.datetime.now().strftime("%Y-%m-%d")
+    month = datetime.datetime.now().strftime("%Y-%m")
+    year = datetime.datetime.now().strftime("%Y")
+    delta = datetime.timedelta(days=1)
+    time_in = datetime.datetime.strptime(day, '%Y-%m-%d')
+    ysday = time_in - delta
+    yesday = ysday.strftime("%Y-%m-%d")
+    #   今日
+    dayNum = Mo.objects.filter(create_time__contains=day).aggregate(nums=Sum('money'))
+    yesdayNum = Mo.objects.filter(create_time__contains=yesday).aggregate(nums=Sum('money'))
+    monthNum = Mo.objects.filter(create_time__contains=month).aggregate(nums=Sum('money'))
+    yearNum = Mo.objects.filter(create_time__contains=year).aggregate(nums=Sum('money'))
+    dn = dayNum['nums']
+    if(dayNum['nums']==None):
+        dn = 0
+    yn = yesdayNum['nums']
+    if (yesdayNum['nums'] == None):
+        yn = 0
+    result = {"code": 0, "msg": "查询成功！", "data": {"dayNum": dn, "yesdayNum": yn, "monthNum": monthNum['nums'], "yearNum": yearNum['nums']}}
+    return JsonResponse(result)
+
+
+# 收入统计图形(今年收入)
+def getIncomeNumForEchartYear(request):
+    d = datetime.datetime.now()
+    year = d.strftime("%Y")
+    income_list = Mo.objects.filter(create_time__contains=year).values()
+    dayName = []
+    dayNum = []
+    for n in range(1, 13):
+        # 获取本月的第n天
+        this_year_start = datetime.datetime(d.year, n, 1)
+        day = this_year_start.strftime("%Y-%m")
+        dayName.append(day)
+        num = 0
+        for m in income_list:
+            if (day in str(m["create_time"])):
+                num += m["money"]
+
+        dayNum.append(num)
+    result = {"code": 0, "msg": "查询成功！", "data": {"dayName": dayName, "dayNum": dayNum}}
     return JsonResponse(result)
